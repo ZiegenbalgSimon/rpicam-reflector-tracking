@@ -8,10 +8,10 @@
 - Raspberry Pi-Grundlagen (wichtige Linux-Befehle, Bedienungsmöglichkeiten)
 
 # rpicam-reflector-tracking
-Dieses Projekt dient dazu, mit einem Raspberry Pi kamerabasiert und in Echtzeit die Position eines retroreflektiven Markers zu verfolgen. Es stellt verschiedene Schnittstellen zur Übertragung der ermittelten Position zur Verfügung.
+Das Projekt rpicam-reflector-tracking dient dazu, mit einem Raspberry Pi kamerabasiert und in Echtzeit die Position eines **retroreflektiven Markers** zu verfolgen. Es stellt verschiedene **Schnittstellen** zur Übertragung der ermittelten Position zur Verfügung.
 
-Diese Dokumentation erklärt die Bestandteile des Projekts, und wie es auf einem Raspberry Pi genutzt werden kann. Zusätzlich werden Möglichkeiten zu Erweiterung des Projektes aufgezeigt.
+Diese **Dokumentation** erklärt die Bestandteile des Projekts, und wie es auf einem Raspberry Pi genutzt werden kann. Zusätzlich werden Möglichkeiten zu Erweiterung des Projekts aufgezeigt.
 
 > [!NOTE]
-> Die Dokumentation ziehlt darauf ab, dass das Projekt auch ohne Vorerfahrung mit Raspberry Pi nutzbar ist.
+> Die Dokumentation ist darauf ausgelegt, dass das Projekt auch ohne Vorerfahrung mit Raspberry Pi nutzbar ist.
 
