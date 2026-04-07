@@ -49,11 +49,29 @@ Auf einem anderen Raspberry Pi-Modell kann beispielsweise die Adressierung der v
 ### Verbindung der Hardware
 Das **Objektiv** wird an das **Kameramodul** geschraubt, das Kameramodul beispielsweise auf einem **Stativ** befestigt. Gemäß der [offiziellen Dokumentation](https://www.raspberrypi.com/documentation/accessories/camera.html#install-a-raspberry-pi-camera) wird die Kamera über ein Flachbandkabel mit `CAM/DISP 0` auf dem Raspberry Pi verbunden.
 
+Die **Halterung** im Ordner `stl` kann mit einem 3D-Drucker gefertigt und dazu genutzt werden, den LED-Ring am Objektiv zu befestigen.
+
+Um kabelgebundenes **Ethernet** als Schnittstelle zur Datenübertragung zu nutzen, kann ein Gerät über ein direktes Kabel mit der RJ45-Buchse des Raspberry Pis verbunden werden.
+
+Für den LED-Ring, sowie für UART und PWM als Schnittstellen zur Ausgabe der bestimmten Position des Markers wird die **GPIO-Anschlussleiste** genutzt, wie unten dargestellt.
+
 <div align="center">
 <picture>
-<img src="/images/raspberry_pi_pinout.svg" alt="GPIO Header mit Verbindungen. LED-Ring: Pin 2 (5v Power), Pin 19 (GPIO 10, SPI0 MOSI), Pin 20 (Ground); UART: Pin 6 (Ground), Pin 14 (GPIO 14, UART0 TX), Pin 15 (GPIO 15, UART0 RX); PWM: Pin 12 (GPIO 18, PWM0), Pin 14 (Ground), Pin 35 (GPIO 19, PWM1)" width="75%">
+<img src="/images/raspberry_pi_pinout.svg" alt="GPIO-Anschlussleiste mit Verbindungen. LED-Ring: Pin 2 (5v Power), Pin 19 (GPIO 10, SPI0 MOSI), Pin 20 (Ground); UART: Pin 6 (Ground), Pin 14 (GPIO 14, UART0 TX), Pin 15 (GPIO 15, UART0 RX); PWM: Pin 12 (GPIO 18, PWM0), Pin 14 (Ground), Pin 35 (GPIO 19, PWM1)" width="75%">
 </picture>
 </div>
+
+LED-Ring
+
+> [!CAUTION]
+> Power
+
+UART
+
+> [!CAUTION]
+> UART-Typ
+
+PWM
 
 ## Erklärung von rpicam-reflector-tracking
 
