@@ -51,6 +51,8 @@ Das **Objektiv** wird an das **Kameramodul** geschraubt, das Kameramodul beispie
 
 Die **Halterung** im Ordner `stl` kann mit einem 3D-Drucker gefertigt und dazu genutzt werden, den LED-Ring am Objektiv zu befestigen.
 
+Abhängig davon, welche Schnittstellen zur verwendet werden sollen, sind entsprechende Verbindungen herzustellen. Erklärungen zu den Schnittstellen finden sich unter [Eingerichteten Raspberry Pi zum Marker Tracking nutzen](#eingerichteten-raspberry-pi-zum-marker-tracking-nutzen).
+
 Um kabelgebundenes **Ethernet** als Schnittstelle zur Datenübertragung zu nutzen, kann ein Gerät über ein direktes Kabel mit der RJ45-Buchse des Raspberry Pis verbunden werden.
 
 Für den LED-Ring, sowie für UART und PWM als Schnittstellen zur Ausgabe der bestimmten Position des Markers wird die **GPIO-Anschlussleiste** genutzt, wie unten dargestellt.
@@ -61,17 +63,17 @@ Für den LED-Ring, sowie für UART und PWM als Schnittstellen zur Ausgabe der be
 </picture>
 </div>
 
-LED-Ring
+Stromversorgung und Steuerung des LED-Rings funktionieren über die GPIO-Anschlussleiste. Dazu werden `5V` und `Ground` des Rings mit den entsprechenden Pins des Raspberry Pis verbunden, sowie `IN` des LED-Rings mit `GPIO 10 (SPI0 MOSI)` der GPIO-Anschlussleiste. Da das Steuersignal mithilfe von SPI erzeugt wird, werden auch `GPIO 9 (SPI0 MISO)`, `GPIO 11 (SPI0 SCLK)` und `GPIO 8 (SPI0 CE0)` verwendet.
 
 > [!WARNING]
-> Power
+> Die Leistung, die der Raspbery Pi über die GPIO-Anschlussleiste bereitstellen kann, ist begrenzt. Den Ring rot, grün oder blau bei maximaler Helligkeit zu betreiben funktioniert zuverlässig. Vor der Nutzung von Einstellungen mit höherer Leistung (z.B. helles Weiß) ist zu prüfen, ob ausreichend Leistung bereitgestellt werden kann.
 
-UART
+Um **UART** (*Universal Asynchronous Receiver Transmitter*) als serielle Schnittstelle zur Datenübertragung zu nutzen ist ein gemeinsames Nullniveau herzustellen (z.B. an `Pin 6 (Ground)`). Zum Senden (*Transmit*) dient `GPIO 14 (UART0 TX)`, zum Empfangen (*Receive*) `GPIO 15 (UART0 RX)`.
 
 > [!WARNING]
-> UART-Typ
+> Der Raspberry Pi nutzt TTL-Pegel mit 0&nbsp;V als `LOW` und +3,3&nbsp;V als `HIGH`. den Rsapberry Pi an eine Schnittstelle anzuschließen, die andere Spannungspegel nutzt, kann zu Schäden führen.
 
-PWM
+Der Raspberry Pi verfügt über zwei Hardware-**PWM**-Kanäle (*Pulsweitenmodulation*), die an `GPIO 18 (PWM0)` und `GPIO 19 (PWM1)` ausgegeben werden.
 
 ## Erklärung von rpicam-reflector-tracking
 
