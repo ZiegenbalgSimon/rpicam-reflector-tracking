@@ -51,7 +51,7 @@ Das **Objektiv** wird an das **Kameramodul** geschraubt, das Kameramodul beispie
 
 Die **Halterung** im Ordner `stl` kann mit einem 3D-Drucker gefertigt und dazu genutzt werden, den LED-Ring am Objektiv zu befestigen.
 
-Abhängig davon, welche Schnittstellen zur verwendet werden sollen, sind entsprechende Verbindungen herzustellen. Erklärungen zu den Schnittstellen finden sich unter [Eingerichteten Raspberry Pi zum Marker Tracking nutzen](#eingerichteten-raspberry-pi-zum-marker-tracking-nutzen).
+Abhängig davon, welche Schnittstellen zur verwendet werden sollen, sind entsprechende Verbindungen herzustellen. Erklärungen zu den Schnittstellen finden sich unter [Ausgabe und Schnittstellen](#ausgabe-und-schnittstellen).
 
 Um kabelgebundenes **Ethernet** als Schnittstelle zur Datenübertragung zu nutzen, kann ein Gerät über ein direktes Kabel mit der RJ45-Buchse des Raspberry Pis verbunden werden.
 
@@ -76,6 +76,13 @@ Um **UART** (*Universal Asynchronous Receiver Transmitter*) als serielle Schnitt
 Der Raspberry Pi verfügt über zwei Hardware-**PWM**-Kanäle (*Pulsweitenmodulation*), die an `GPIO 18 (PWM0)` und `GPIO 19 (PWM1)` ausgegeben werden.
 
 ## Erklärung von rpicam-reflector-tracking
+### Marker-Tracking in der rpicam-apps pipeline
+rpicam-apps (Apps, frame-Objekt mit Metadaten, post-processing Stufen)
+Algorithmus (Schwellenwertentfernung und helligkeitsgewichtetes Zentrum)
+### Ausgabe und Schnittstellen
+
+### Projektstruktur
+Erklärung der Ordner und wie sie sich referenzieren
 
 ## Raspberry Pi einrichten mit rpicam-reflector-tracking
 ### Raspberry Pi vorbereiten
