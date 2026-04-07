@@ -63,12 +63,12 @@ Für den LED-Ring, sowie für UART und PWM als Schnittstellen zur Ausgabe der be
 
 LED-Ring
 
-> [!CAUTION]
+> [!WARNING]
 > Power
 
 UART
 
-> [!CAUTION]
+> [!WARNING]
 > UART-Typ
 
 PWM
