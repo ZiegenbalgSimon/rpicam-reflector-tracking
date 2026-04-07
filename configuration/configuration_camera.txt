@@ -1,0 +1,6 @@
+width=1456
+height=1088
+viewfinder-width=1456
+viewfinder-height=1088
+framerate=60
+shutter=100

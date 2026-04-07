@@ -40,11 +40,24 @@ Das Projekt wurde für die folgende Hardware entwickelt und mit dieser getestet.
 Auf einem anderen Raspberry Pi-Modell kann beispielsweise die Adressierung der verwendeten Schnittstellen abweichen. Bei Nutzung einer anderen Kamera ist die Sensorauflösung zu beachten.
 
 ### Verbindung der Hardware
-Das Kameramodul wird beispielsweise auf einem Stativ befestigt, das Objektiv an das Kameramodul geschraubt. Gemäß der [offiziellen Dokumentation](https://www.raspberrypi.com/documentation/accessories/camera.html#install-a-raspberry-pi-camera) wird die Kamera über ein Flachbandkabel mit ... auf dem Raspberry Pi verbunden.
+Das Kameramodul wird an das Kameramodul geschraubt, das Kameramodul beispielsweise auf einem Stativ befestigt. Gemäß der [offiziellen Dokumentation](https://www.raspberrypi.com/documentation/accessories/camera.html#install-a-raspberry-pi-camera) wird die Kamera über ein Flachbandkabel mit ... auf dem Raspberry Pi verbunden.
 
 ## Erklärung von rpicam-reflector-tracking
 
 ## Raspberry Pi einrichten mit rpicam-reflector-tracking
+### Raspberry Pi vorbereiten
+```bash
+sudo apt install -y libcamera-dev libepoxy-dev libjpeg-dev libtiff5-dev libpng-dev libopencv-dev
+sudo apt install -y qtbase5-dev libqt5core5a libqt5gui5 libqt5widgets5
+sudo apt install libavcodec-dev libavdevice-dev libavformat-dev libswresample-dev
+```
+### rpicam-reflector-tracking einrichten
+```bash
+cd ~/rpicam-reflector-tracking
+```
+```bash
+cd ~/rpicam-reflector-tracking
+```
 
 ## Eingerichteten Raspberry Pi zum Marker Tracking nutzen
 

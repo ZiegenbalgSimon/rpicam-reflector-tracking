@@ -1,0 +1,10 @@
+{
+    "marker_tracking_cv": {
+        "threshold": 150
+    },
+    "position_uart": {},
+    "draw_centroid_cv": {
+        "radius": 16,
+        "thickness": 2
+    }
+}

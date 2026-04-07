@@ -1,0 +1,15 @@
+{
+    "marker_tracking_cv": {
+        "threshold": 150
+    },
+    "position_pwm": {
+        "period": 100000,
+        "frame_width": 1456,
+        "frame_height": 1088
+    },
+    "position_cout": {},
+    "draw_centroid_cv": {
+        "radius": 16,
+        "thickness": 2
+    }
+}

@@ -5,7 +5,7 @@ opencv_dep = dependency('opencv4')
 
 transmission_postproc_src = files([
   'new_post_processing_stages/position_cout_stage.cpp',
-  'new_post_processing_stages/position_ethernet_stage_old.cpp',
+  'new_post_processing_stages/position_ethernet_stage.cpp',
   'new_post_processing_stages/position_pwm_stage.cpp',
   'new_post_processing_stages/position_uart_stage.cpp'
 ])
