@@ -11,8 +11,6 @@
 
 Das Projekt rpicam-reflector-tracking dient dazu, mit einem **Raspberry Pi** kamerabasiert und in Echtzeit die Position eines **retroreflektiven Markers** zu verfolgen. Es stellt verschiedene **Schnittstellen** zur Übertragung der ermittelten Position zur Verfügung.
 
-![Kamera mit Objektiv und blau leuchtendem LED-Ring auf einem Stativ, verbunden mit einem Raspberry Pi 5](/images/camera_tripod_setup_diagonal.jpeg)
-
 <picture>
 <img src="/images/camera_tripod_setup_diagonal.jpeg" alt="Kamera mit Objektiv und blau leuchtendem LED-Ring auf einem Stativ, verbunden mit einem Raspberry Pi 5" width="50%">
 </picture>
