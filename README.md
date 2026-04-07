@@ -47,9 +47,9 @@ Das Kameramodul wird an das Kameramodul geschraubt, das Kameramodul beispielswei
 ## Raspberry Pi einrichten mit rpicam-reflector-tracking
 ### Raspberry Pi vorbereiten
 ```bash
-sudo apt install -y libcamera-dev libepoxy-dev libjpeg-dev libtiff5-dev libpng-dev libopencv-dev
-sudo apt install -y qtbase5-dev libqt5core5a libqt5gui5 libqt5widgets5
-sudo apt install libavcodec-dev libavdevice-dev libavformat-dev libswresample-dev
+$ sudo apt install -y libcamera-dev libepoxy-dev libjpeg-dev libtiff5-dev libpng-dev libopencv-dev
+$ sudo apt install -y qtbase5-dev libqt5core5a libqt5gui5 libqt5widgets5
+$ sudo apt install libavcodec-dev libavdevice-dev libavformat-dev libswresample-dev
 ```
 ### rpicam-reflector-tracking einrichten
 ```bash
