@@ -47,16 +47,57 @@ Das Kameramodul wird an das Kameramodul geschraubt, das Kameramodul beispielswei
 ## Raspberry Pi einrichten mit rpicam-reflector-tracking
 ### Raspberry Pi vorbereiten
 ```bash
-$ sudo apt install -y libcamera-dev libepoxy-dev libjpeg-dev libtiff5-dev libpng-dev libopencv-dev
-$ sudo apt install -y qtbase5-dev libqt5core5a libqt5gui5 libqt5widgets5
-$ sudo apt install libavcodec-dev libavdevice-dev libavformat-dev libswresample-dev
+sudo apt install -y libcamera-dev libepoxy-dev libjpeg-dev libtiff5-dev libpng-dev libopencv-dev
+sudo apt install -y qtbase5-dev libqt5core5a libqt5gui5 libqt5widgets5
+sudo apt install libavcodec-dev libavdevice-dev libavformat-dev libswresample-dev
+```
+```bash
+sudo apt install -y cmake libboost-program-options-dev libdrm-dev libexif-dev
+sudo apt install -y meson ninja-build
 ```
 ### rpicam-reflector-tracking einrichten
 ```bash
 cd ~/rpicam-reflector-tracking
 ```
 ```bash
+git clone https://github.com/raspberrypi/rpicam-apps.git
+```
+```bash
+rm rpicam-apps/meson.build
+```
+```bash
+mv new_post_processing_stages rpicam-apps/
+mv meson.build rpicam-apps/
+```
+```bash
+cd ~/rpicam-reflector-tracking/rpicam-apps
+```
+```bash
+meson setup build
+```
+```bash
+meson compile -C build
+```
+```bash
 cd ~/rpicam-reflector-tracking
+```
+```bash
+chmod +x programs/*.sh
+chmod +x set_leds/*.py
+```
+```bash
+cd ~/rpicam-reflector-tracking/interfaces
+```
+```bash
+g++ ethernet_await_start.cpp -o ethernet_await_start
+g++ ethernet_recv_byte.cpp -o ethernet_recv_byte
+g++ ethernet_recv_coor.cpp -o ethernet_recv_coor
+g++ ethernet_send_byte.cpp -o ethernet_send_byte
+g++ ethernet_send_coor.cpp -o ethernet_send_coor
+g++ pwm_clear.cpp -o pwm_clear
+g++ pwm_set_coor.cpp -o pwm_set_coor
+g++ uart_recv_coor.cpp -o uart_recv_coor
+g++ uart_send_coor.cpp -o uart_send_coor
 ```
 
 ## Eingerichteten Raspberry Pi zum Marker Tracking nutzen
