@@ -1,4 +1,4 @@
-## Struktur
+<!--
 - Einleitung (Ziel der Doku, Zielgruppe der Doku, Aufbau der Doku)
 - Hardware (Software Versionen) + Verbindungen
 - Erklärung Projekt (Hintergrund rpicam-apps, Erklärung der Stufen, LED, config, Programme, Test der Schnittstellen)
@@ -6,6 +6,7 @@
 - Eingerichteten Pi bedienen
 - Erweiterungsmöglichkeiten
 - Raspberry Pi-Grundlagen (wichtige Linux-Befehle, Bedienungsmöglichkeiten)
+-->
 
 # rpicam-reflector-tracking
 
@@ -46,7 +47,13 @@ Das Projekt wurde für die folgende Hardware entwickelt und mit dieser getestet.
 Auf einem anderen Raspberry Pi-Modell kann beispielsweise die Adressierung der verwendeten Schnittstellen abweichen. Bei Nutzung einer anderen Kamera ist die Sensorauflösung zu beachten.
 
 ### Verbindung der Hardware
-Das Kameramodul wird an das Kameramodul geschraubt, das Kameramodul beispielsweise auf einem Stativ befestigt. Gemäß der [offiziellen Dokumentation](https://www.raspberrypi.com/documentation/accessories/camera.html#install-a-raspberry-pi-camera) wird die Kamera über ein Flachbandkabel mit ... auf dem Raspberry Pi verbunden.
+Das **Objektiv** wird an das **Kameramodul** geschraubt, das Kameramodul beispielsweise auf einem **Stativ** befestigt. Gemäß der [offiziellen Dokumentation](https://www.raspberrypi.com/documentation/accessories/camera.html#install-a-raspberry-pi-camera) wird die Kamera über ein Flachbandkabel mit `CAM/DISP 0` auf dem Raspberry Pi verbunden.
+
+<div align="center">
+<picture>
+<img src="/images/raspberry_pi_pinout.svg" alt="GPIO Header mit Verbindungen. LED-Ring: Pin 2 (5v Power), Pin 19 (GPIO 10, SPI0 MOSI), Pin 20 (Ground); UART: Pin 6 (Ground), Pin 14 (GPIO 14, UART0 TX), Pin 15 (GPIO 15, UART0 RX); PWM: Pin 12 (GPIO 18, PWM0), Pin 14 (Ground), Pin 35 (GPIO 19, PWM1)" width="60%">
+</picture>
+</div>
 
 ## Erklärung von rpicam-reflector-tracking
 
