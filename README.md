@@ -93,19 +93,19 @@ In diesem Projekt werden konkret die folgenden Apps verwendet.
 
 Für die Apps stehen verschiedene Optionen zur Verfügung ([Übersicht](https://www.raspberrypi.com/documentation/computers/camera_software.html#rpicam-apps-options-reference)), die verwendeten sind hier aufgelistet.
 
-| Option | Alias | Beschreibung |
+| Option | Flag | Beschreibung |
 | --- | --- | --- |
 | timeout | -t   | Gib die Laufzeit an, nach der sich die App schließt (0 für unbegrenzt) |
 | config | -c    | Gib eine Datei mit Konfigurationsdaten an |
-| output | -o    |  |
-| post-process-libs | --post-process-libs |  |
-| post-process-file | --post-process-file |  |
-| width | --width |  |
-| height | --height |  |
-| viewfinder-width | --viefinder-width |  |
-| viewfinder-height | --viewfinder-height |  |
-| framerate | --framerate |  |
-| shutter | --shutter |  |
+| output | -o    | Gib den Dateinamen an (nicht für `rpicam-hello`) |
+| post-process-libs | --post-process-libs | Gib den Speicherort der zu nutzenden Postprocessing-Stufen an |
+| post-process-file | --post-process-file | Gib eine JSON-Datei an, die das Postprocessing konfiguriert |
+| width | --width | Breite (Pixel) des Ausgangs (effektlos für `rpicam-hello`) |
+| height | --height | Höhe des (Pixel) Ausgangs (effektlos für `rpicam-hello`) |
+| viewfinder-width | --viefinder-width | Breite (Pixel) der Vorschau |
+| viewfinder-height | --viewfinder-height | Höhe (Pixel) der Vorschau |
+| framerate | --framerate | Bildrate |
+| shutter | --shutter | Belichtungszeit in Mikrosekunden |
 
 rpicam-apps (Apps, frame-Objekt mit Metadaten, post-processing Stufen)
 Algorithmus (Schwellenwertentfernung und helligkeitsgewichtetes Zentrum)
