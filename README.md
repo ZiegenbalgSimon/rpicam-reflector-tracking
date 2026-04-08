@@ -77,12 +77,15 @@ Der Raspberry Pi verfügt über zwei Hardware-**PWM**-Kanäle (*Pulsweitenmodula
 
 <div align="center">
 <picture>
-<img src="/images/pwm_validation_circuit.svg" alt="PWM0 und PWM1, jeweils über eine LED und einen 100 Ohm Widerstand mit Ground verbunden" width="40%">
+<img src="/images/pwm_validation_circuit.svg" alt="PWM0 und PWM1, jeweils über eine LED und einen 100 Ohm Widerstand mit Ground verbunden" width="45%">
 </picture>
 </div>
 
 ## Erklärung von rpicam-reflector-tracking
+Im Zentrum von rpicam-reflector-tracking steht die Gewinnung von Lageinformationen mithilfe der an den Raspberry Pi angeschlossenen Kamera. Außerdem werden verschiedene Schnittstellen zur Verfügung gestellt, um die gewonnenen Informationen zu übertragen.
 ### Marker-Tracking in der rpicam-apps pipeline
+Raspberry Pi stellt mit `rpicam-apps` einige Applikationen zur Verwendung vom Kameras zur Verfügung (siehe [Dokumentation](https://www.raspberrypi.com/documentation/accessories/camera.html#install-a-raspberry-pi-camera))
+
 rpicam-apps (Apps, frame-Objekt mit Metadaten, post-processing Stufen)
 Algorithmus (Schwellenwertentfernung und helligkeitsgewichtetes Zentrum)
 ### Ausgabe und Schnittstellen
