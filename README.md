@@ -90,8 +90,9 @@ In diesem Projekt werden konkret die folgenden Apps verwendet.
 - `rpicam-hello`: zeigt ein Vorschaufenster an
 - `rpicam-vid`: nimmt ein Video auf
 Für die Apps stehen verschiedene [Optionen](https://www.raspberrypi.com/documentation/computers/camera_software.html#rpicam-apps-options-reference) zur Verfügung, die verwendeten sind hier aufgelistet.
+
 | Option | Alias | Beschreibung |
-| ------ | ----- | ------------ |
+| --- | --- | --- |
 | timeout | -t   | Gib die Laufzeit an, nach der sich die App schließt (0 für unbegrenzt) |
 | config | -c    | Gib eine Datei mit Konfigurationsdaten an |
 | 
