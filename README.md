@@ -84,7 +84,17 @@ Der Raspberry Pi verfügt über zwei Hardware-**PWM**-Kanäle (*Pulsweitenmodula
 ## Erklärung von rpicam-reflector-tracking
 Im Zentrum von rpicam-reflector-tracking steht die Gewinnung von Lageinformationen mithilfe der an den Raspberry Pi angeschlossenen Kamera. Außerdem werden verschiedene Schnittstellen zur Verfügung gestellt, um die gewonnenen Informationen zu übertragen.
 ### Marker-Tracking in der rpicam-apps pipeline
-Raspberry Pi stellt mit `rpicam-apps` einige Applikationen zur Verwendung vom Kameras zur Verfügung (siehe [Dokumentation](https://www.raspberrypi.com/documentation/accessories/camera.html#install-a-raspberry-pi-camera))
+Raspberry Pi stellt mit `rpicam-apps` einige Applikationen zur Verwendung vom Kameras zur Verfügung (siehe [Dokumentation](https://www.raspberrypi.com/documentation/accessories/camera.html#install-a-raspberry-pi-camera)).
+
+In diesem Projekt werden konkret die folgenden Apps verwendet.
+- `rpicam-hello`: zeigt ein Vorschaufenster an
+- `rpicam-vid`: nimmt ein Video auf
+Für die Apps stehen verschiedene [Optionen](https://www.raspberrypi.com/documentation/computers/camera_software.html#rpicam-apps-options-reference) zur Verfügung, die verwendeten sind hier aufgelistet.
+| Option | Alias | Beschreibung |
+| ------ | ----- | ------------ |
+| timeout | -t   | Gib die Laufzeit an, nach der sich die App schließt (0 für unbegrenzt) |
+| config | -c    | Gib eine Datei mit Konfigurationsdaten an |
+| 
 
 rpicam-apps (Apps, frame-Objekt mit Metadaten, post-processing Stufen)
 Algorithmus (Schwellenwertentfernung und helligkeitsgewichtetes Zentrum)
