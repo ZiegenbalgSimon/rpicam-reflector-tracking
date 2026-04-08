@@ -87,15 +87,25 @@ Im Zentrum von rpicam-reflector-tracking steht die Gewinnung von Lageinformation
 Raspberry Pi stellt mit `rpicam-apps` einige Applikationen zur Verwendung vom Kameras zur Verfügung (siehe [Dokumentation](https://www.raspberrypi.com/documentation/accessories/camera.html#install-a-raspberry-pi-camera)).
 
 In diesem Projekt werden konkret die folgenden Apps verwendet.
+
 - `rpicam-hello`: zeigt ein Vorschaufenster an
 - `rpicam-vid`: nimmt ein Video auf
-Für die Apps stehen verschiedene [Optionen](https://www.raspberrypi.com/documentation/computers/camera_software.html#rpicam-apps-options-reference) zur Verfügung, die verwendeten sind hier aufgelistet.
+
+Für die Apps stehen verschiedene Optionen zur Verfügung ([Übersicht](https://www.raspberrypi.com/documentation/computers/camera_software.html#rpicam-apps-options-reference)), die verwendeten sind hier aufgelistet.
 
 | Option | Alias | Beschreibung |
 | --- | --- | --- |
 | timeout | -t   | Gib die Laufzeit an, nach der sich die App schließt (0 für unbegrenzt) |
 | config | -c    | Gib eine Datei mit Konfigurationsdaten an |
-| 
+| output | -o    |  |
+| post-process-libs | --post-process-libs |  |
+| post-process-file | --post-process-file |  |
+| width | --width |  |
+| height | --height |  |
+| viewfinder-width | --viefinder-width |  |
+| viewfinder-height | --viewfinder-height |  |
+| framerate | --framerate |  |
+| shutter | --shutter |  |
 
 rpicam-apps (Apps, frame-Objekt mit Metadaten, post-processing Stufen)
 Algorithmus (Schwellenwertentfernung und helligkeitsgewichtetes Zentrum)
