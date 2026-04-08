@@ -107,12 +107,12 @@ Für die Apps stehen verschiedene Optionen zur Verfügung ([Übersicht](https://
 | framerate | --framerate | Bildrate |
 | shutter | --shutter | Belichtungszeit in Mikrosekunden |
 
-rpicam-apps (Apps, frame-Objekt mit Metadaten, post-processing Stufen)
-Algorithmus (Schwellenwertentfernung und helligkeitsgewichtetes Zentrum)
+<!--rpicam-apps (Apps, frame-Objekt mit Metadaten, post-processing Stufen)
+Algorithmus (Schwellenwertentfernung und helligkeitsgewichtetes Zentrum)-->
 ### Ausgabe und Schnittstellen
 
 ### Projektstruktur
-Erklärung der Ordner und wie sie sich referenzieren
+<!--Erklärung der Ordner und wie sie sich referenzieren-->
 
 ## Raspberry Pi einrichten mit rpicam-reflector-tracking
 ### Raspberry Pi vorbereiten
