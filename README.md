@@ -71,9 +71,15 @@ Stromversorgung und Steuerung des LED-Rings funktionieren über die GPIO-Anschlu
 Um **UART** (*Universal Asynchronous Receiver Transmitter*) als serielle Schnittstelle zur Datenübertragung zu nutzen ist ein gemeinsames Nullniveau herzustellen (z.B. an `Pin 6 (Ground)`). Zum Senden (*Transmit*) dient `GPIO 14 (UART0 TX)`, zum Empfangen (*Receive*) `GPIO 15 (UART0 RX)`.
 
 > [!WARNING]
-> Der Raspberry Pi nutzt TTL-Pegel mit 0&nbsp;V als `LOW` und +3,3&nbsp;V als `HIGH`. den Rsapberry Pi an eine Schnittstelle anzuschließen, die andere Spannungspegel nutzt, kann zu Schäden führen.
+> Der Raspberry Pi nutzt TTL-Pegel mit 0&nbsp;V als `LOW` und +3,3&nbsp;V als `HIGH`. Den Rsapberry Pi an eine Schnittstelle anzuschließen, die andere Spannungspegel nutzt, kann zu Schäden führen.
 
-Der Raspberry Pi verfügt über zwei Hardware-**PWM**-Kanäle (*Pulsweitenmodulation*), die an `GPIO 18 (PWM0)` und `GPIO 19 (PWM1)` ausgegeben werden.
+Der Raspberry Pi verfügt über zwei Hardware-**PWM**-Kanäle (*Pulsweitenmodulation*), die an `GPIO 18 (PWM0)` und `GPIO 19 (PWM1)` ausgegeben werden. Um zu validieren, dass PWM-Signale abhängig von der Position des Markers erzeugt werden, kann die folgende einfache Schaltung angeschlossen werden. Die Helligkeit der LEDs verändert sich hierbei mit der Pulsweite, die abhängig von der Position des Markers gesetzt wird.
+
+<div align="center">
+<picture>
+<img src="/images/pwm_validation_circuit.svg" alt="PWM0 und PWM1, jeweils über eine LED und einen 100 Ohm Widerstand mit Ground verbunden" width="40%">
+</picture>
+</div>
 
 ## Erklärung von rpicam-reflector-tracking
 ### Marker-Tracking in der rpicam-apps pipeline
