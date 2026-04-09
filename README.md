@@ -119,21 +119,13 @@ Die Bestimmung der Markerposition sowie deren Darstellung und Übertragung über
 </picture>
 </div>
 
-**Postprocessing-Stufen** können der `rpicam-apps`-Pipeline hinzugefügt werden, um Stufe nach Stufe die Bildmatrix und die Metadaten jedes Frames analysieren und modifizieren zu können ([Dokumentation `rpicam-apps`](https://www.raspberrypi.com/documentation/computers/camera_software.html#post-processing-with-rpicam-apps)). Die zu verwendenden Postprocessing-Stufen werden un einer JSON-Datei angegeben, welche mithilfe der Option `post-process-file` an die entsprechende Applikation übergeben wird. Die Größe der an die Postprocessing-Stufen übergebenen Frames hängt von der Ausgabegröße für das Vorschaufenster beziehungsweise die Datei ab, die mit den oben aufgeführten Optionen konfiguriert werden können. Zusätzlich zu den in `rpicam-apps` enthaltenen Postprocesing-Stufen können gemäß [Dokumentation](https://www.raspberrypi.com/documentation/computers/camera_software.html#write-your-own-post-processing-stages) weitere Stufen in *C++* geschrieben und zur Pipeline hinzugefügt werden. Dazu wird der entsprechenden Applikation mithilfe der Option `post-process-libs` der Speicherort der kompilierten zusätzlichen Postprocessing-Stufen übergeben.
+**Postprocessing-Stufen** können der `rpicam-apps`-Pipeline hinzugefügt werden, um Stufe nach Stufe die Bildmatrix und die Metadaten jedes Frames analysieren und modifizieren zu können ([Dokumentation post-processing](https://www.raspberrypi.com/documentation/computers/camera_software.html#post-processing-with-rpicam-apps)). Die zu verwendenden Postprocessing-Stufen werden un einer JSON-Datei angegeben, welche mithilfe der Option `post-process-file` an die entsprechende Applikation übergeben wird. Die Größe der an die Postprocessing-Stufen übergebenen Frames hängt von der Ausgabegröße für das Vorschaufenster beziehungsweise die Datei ab, die mit den oben aufgeführten Optionen konfiguriert werden können. Zusätzlich zu den in `rpicam-apps` enthaltenen Postprocesing-Stufen können gemäß [Dokumentation](https://www.raspberrypi.com/documentation/computers/camera_software.html#write-your-own-post-processing-stages) weitere Stufen in *C++* geschrieben und zur Pipeline hinzugefügt werden. Dazu wird der entsprechenden Applikation mithilfe der Option `post-process-libs` der Speicherort der kompilierten zusätzlichen Postprocessing-Stufen übergeben.
 
 Die `.cpp`-Dateien der zusätzlichen Postprocessing-Stufen dieses Projektes befinden sich im Ordner `new_post_processing_stages`.
 
 Von diesen neuen Stufen ist `"marker_tracking_cv"` dafür zuständig, aus jedem Frame die Position des retroreflektiven Markers zu bestimmen. Dazu werden in einem ersten Schritt alle Pixel, deren Helligkeit unter einem Schwellenwert liegt, in der Bild-Matrix auf 0 gesetzt. Anschließend wird das helligkeitsgewichtete Zentrum der verbleibenden Pixel berechnet. Die so bestimmte Position wird in die Metadaten des Frames geschrieben, um von nachfolgenden Postprocessing-Stufen genutzt zu werden. `"marker_tracking_cv"` nutzt die Bibliothek [OpenCV](https://docs.opencv.org/4.x/d1/dfb/intro.html).
 
 ### Ausgabe und Schnittstellen
-<!--
-- `'draw_centroid_cv'`
-- Übertragungsformat `'position_ethernet'`, `'position_cout'`, `'position_uart'`
-- `'position_ethernet'` (erfordert IP, ließt Stop-byte)
-- `'position_cout'`
-- `'position_uart'` (Übertragungsformat, baud 115200)
-- `'position_pwm'` (Schaubild, Verwendung) 
-- Übersicht über Postprocessing-Stufen -->
 
 Das Projekt `rpicam-reflector-tracking` enthält Postprocessing-Stufen, mit denen die durch `"marker_tracking_cv"` bestimmte Markerposition visualisiert und über verschiedene Schnittstellen übertragen werden kann.
 
@@ -155,7 +147,7 @@ Die von den Postprocessing-Stufen `"position_ethernet"`, `"position_cout"` und `
 | --- | --- |
 | `"marker_tracking_cv"` | `"threshold"`&nbsp;(150) |
 | `"draw_centroid_cv"` | `"radius"`&nbsp;(16), `"thickness"`&nbsp;(2) |
-| `"position_ethernet"` | `"ip"`&nbsp;(`"192.168.1.2"`), `"port"`&nbsp;(8080) |
+| `"position_ethernet"` | `"ip"`&nbsp;("192.168.1.2"), `"port"`&nbsp;(8080) |
 | `"position_cout"` | / |
 | `"position_uart"` | / |
 | `"position_pwm"` | `"period"`&nbsp;(100000), `"frame_width"`&nbsp;(1456), `"frame_height"`&nbsp;(1088) |
@@ -163,6 +155,22 @@ Die von den Postprocessing-Stufen `"position_ethernet"`, `"position_cout"` und `
 ### Projektstruktur
 <!--Erklärung der Ordner und wie sie sich referenzieren
 LED, config, Programme, Test der Schnittstellen-->
+```text
+rpicam-reflector-tracking/
+├── configuration/
+│   ├── configuration_post_processing/
+│   └── configuration_camera.txt
+├── images/
+├── interfaces/
+├── programs/
+├── rpicam-apps/
+│   ├── new_post_processing_stages/
+│   ├── meson.build
+│   └── ...
+├── set_leds/
+├── stl/
+└── README.md
+```
 
 ## Raspberry Pi einrichten mit rpicam-reflector-tracking
 ### Raspberry Pi vorbereiten
