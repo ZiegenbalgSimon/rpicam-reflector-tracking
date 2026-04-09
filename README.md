@@ -115,7 +115,7 @@ rpicam-hello -t 30s --shutter 100
 
 <div align="center">
 <picture>
-<img src="/images/post_processing_pipeline.svg" alt="Strukturdiagramm. rpicam-apps steuert die Kamera, die frames an rpicam-hello oder rpicam-vid gibt. Innerhalb dieser können Postprocessing-Stufen (aus rpicam-apps und extern) hinzugefügt werden, die Bildmatrix und Metadaten verändern. Die Ausgabe erfolgt auf ein Vorschaufenster und bei rpicam-vid zusätzlich in eine Datei.">
+<img src="/images/post_processing_pipeline.svg" alt="Strukturdiagramm. rpicam-apps steuert die Kamera, die frames an rpicam-hello oder rpicam-vid gibt. Innerhalb dieser können Postprocessing-Stufen (aus rpicam-apps und extern) hinzugefügt werden, die Bildmatrix und Metadaten verändern. Die Ausgabe erfolgt auf ein Vorschaufenster und bei rpicam-vid zusätzlich in eine Datei." width="90%">
 </picture>
 </div>
 
