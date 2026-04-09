@@ -1,6 +1,4 @@
 <!--
-- Einleitung (Ziel der Doku, Zielgruppe der Doku, Aufbau der Doku)
-- Hardware (Software Versionen) + Verbindungen
 - Erklärung Projekt (Hintergrund rpicam-apps, Erklärung der Stufen, LED, config, Programme, Test der Schnittstellen)
 - Pi einrichten (von neu, Konfiguration des Betriebssystems, Tracking-Software einrichten)
 - Eingerichteten Pi bedienen
@@ -113,18 +111,58 @@ Der folgende Befehl startet für 30 Sekunden ein Vorschaufenster mit einer Belic
 rpicam-hello -t 30s --shutter 100
 ```
 
+Die Bestimmung der Markerposition sowie deren Darstellung und Übertragung über verschiedene Schnittstellen werden in Form von Postprocessing-Stufen in die `rpicam-apps`-Pipeline implementiert. Die für dieses Projekt relevante Struktur von `rpicam-apps` und insbesondere die Rolle von Postprocessing-Stufen ist hier dargestellt.
+
 <div align="center">
 <picture>
-<img src="/images/post_processing_pipeline.svg" alt="Strukturdiagramm. rpicam-apps steuert die Kamera, die frames an rpicam-hello oder rpicam-vid gibt. Innerhalb dieser können Postprocessing-Stufen (aus rpicam-apps und extern) hinzugefügt werden, die Bildmatrix und Metadaten verändern. Die Ausgabe erfolgt auf ein Vorschaufenster und bei rpicam-vid zusätzlich in eine Datei." width="90%">
+<img src="/images/post_processing_pipeline.svg" alt="Strukturdiagramm. rpicam-apps steuert die Kamera, die Frames an rpicam-hello oder rpicam-vid gibt. Innerhalb dieser können Postprocessing-Stufen (aus rpicam-apps und extern) hinzugefügt werden, die Bildmatrix und Metadaten verändern. Die Ausgabe erfolgt auf ein Vorschaufenster und bei rpicam-vid zusätzlich in eine Datei." width="90%">
 </picture>
 </div>
 
-<!--rpicam-apps (Apps, frame-Objekt mit Metadaten, post-processing Stufen)
-Algorithmus (Schwellenwertentfernung und helligkeitsgewichtetes Zentrum)-->
+**Postprocessing-Stufen** können der `rpicam-apps`-Pipeline hinzugefügt werden, um Stufe nach Stufe die Bildmatrix und die Metadaten jedes Frames analysieren und modifizieren zu können ([Dokumentation `rpicam-apps`](https://www.raspberrypi.com/documentation/computers/camera_software.html#post-processing-with-rpicam-apps)). Die zu verwendenden Postprocessing-Stufen werden un einer JSON-Datei angegeben, welche mithilfe der Option `post-process-file` an die entsprechende Applikation übergeben wird. Die Größe der an die Postprocessing-Stufen übergebenen Frames hängt von der Ausgabegröße für das Vorschaufenster beziehungsweise die Datei ab, die mit den oben aufgeführten Optionen konfiguriert werden können. Zusätzlich zu den in `rpicam-apps` enthaltenen Postprocesing-Stufen können gemäß [Dokumentation](https://www.raspberrypi.com/documentation/computers/camera_software.html#write-your-own-post-processing-stages) weitere Stufen in *C++* geschrieben und zur Pipeline hinzugefügt werden. Dazu wird der entsprechenden Applikation mithilfe der Option `post-process-libs` der Speicherort der kompilierten zusätzlichen Postprocessing-Stufen übergeben.
+
+Die `.cpp`-Dateien der zusätzlichen Postprocessing-Stufen dieses Projektes befinden sich im Ordner `new_post_processing_stages`.
+
+Von diesen neuen Stufen ist `"marker_tracking_cv"` dafür zuständig, aus jedem Frame die Position des retroreflektiven Markers zu bestimmen. Dazu werden in einem ersten Schritt alle Pixel, deren Helligkeit unter einem Schwellenwert liegt, in der Bild-Matrix auf 0 gesetzt. Anschließend wird das helligkeitsgewichtete Zentrum der verbleibenden Pixel berechnet. Die so bestimmte Position wird in die Metadaten des Frames geschrieben, um von nachfolgenden Postprocessing-Stufen genutzt zu werden. `"marker_tracking_cv"` nutzt die Bibliothek [OpenCV](https://docs.opencv.org/4.x/d1/dfb/intro.html).
+
 ### Ausgabe und Schnittstellen
+<!--
+- `'draw_centroid_cv'`
+- Übertragungsformat `'position_ethernet'`, `'position_cout'`, `'position_uart'`
+- `'position_ethernet'` (erfordert IP, ließt Stop-byte)
+- `'position_cout'`
+- `'position_uart'` (Übertragungsformat, baud 115200)
+- `'position_pwm'` (Schaubild, Verwendung) 
+- Übersicht über Postprocessing-Stufen -->
+
+Das Projekt `rpicam-reflector-tracking` enthält Postprocessing-Stufen, mit denen die durch `"marker_tracking_cv"` bestimmte Markerposition visualisiert und über verschiedene Schnittstellen übertragen werden kann.
+
+`"draw_centroid_cv"` liest die von `"marker_tracking_cv"` bestimmte Position aus den Metadaten des Frames aus und zeichnet an der entsprechenden Stelle der Bild-Matrix eine Markierung ein, die im Vorschaufenster beziehungsweise in der Datei zu sehen ist. `"marker_tracking_cv"` nutzt die Bibliothek [OpenCV](https://docs.opencv.org/4.x/d1/dfb/intro.html).
+
+`"position_ethernet"` sendet die aus den Metadaten gelesene Position des Markers per Ethernet an die IP-Adresse `192.168.1.2`. Diese ist in dem lokalen Netzwerk entsprechend dem Empfänger zuzuordnen. Außerdem prüft `"position_ethernet"`, ob per Ethernet Daten empfangen wurden. Wenn die `STOP`-Flag `0xFF` empfangen wurde, beendet `"position_ethernet"` die laufende Kameraapplikation, zum Beispiel `rpicam-hello`.
+
+`"position_cout"` überträgt die Markerposition aus den Metadaten als Text an die Standardausgabe `cout`. Diese wird typischerweise auf das Terminal ausgegeben, von dem aus eine Applikation mit `"position_cout"` als Postprocessing-Stufe gestartet wurde.
+
+`"position_uart"` sendet die Markerposition aus den Metadaten über eine serielle UART-Schnittstelle mit einer Baudrate von 115200. Teil der Übertragung ist ein Synchronisationsbyte `0xAA`, die genaue Struktur der Datenübertragung ist in dem entsprechenden Code dokumentiert.
+
+Die von den Postprocessing-Stufen `"position_ethernet"`, `"position_cout"` und `"position_uart"` ausgegebene Position hat das Format `(FLOOR(x * 10), FLOOR(y * 10))`, wobei x und y die Position des Markers in Pixeln abbilden. So können Ganzzahlen verwendet und trotzdem, für höhere Auflösung, die erste Nachkommastelle der Pixelposition erhalten werden.
+
+`"position_pwm"` setzt den Tastgrad der Hardware-PWM-Kanäle 0 und 1 des Raspberry Pis abhängig von der Pixelposition des Markers, wobei `PWM0` die horizontale Position und `PWM1` die vertikale Position repräsentiert. Der Tastgrad wird konkret auf `x / frame_width` beziehungsweise `y / frame_height` gesetzt. Durch Verwendung der mittleren Spannung innerhalb eines Zeitintervalls oder durch Pulsdauermessung kann die Positionsinformation aus dem PWM-Signal zurückgewonnen werden.
+
+**Liste der Postprocessing-Stufen**
+
+| Bezeichnung | Konfigurierbare Parameter (default) |
+| --- | --- |
+| `"marker_tracking_cv"` | `"threshold"`&nbsp;(150) |
+| `"draw_centroid_cv"` | `"radius"`&nbsp;(16), `"thickness"`&nbsp;(2) |
+| `"position_ethernet"` | `"ip"`&nbsp;(`"192.168.1.2"`), `"port"`&nbsp;(8080) |
+| `"position_cout"` | / |
+| `"position_uart"` | / |
+| `"position_pwm"` | `"period"`&nbsp;(100000), `"frame_width"`&nbsp;(1456), `"frame_height"`&nbsp;(1088) |
 
 ### Projektstruktur
-<!--Erklärung der Ordner und wie sie sich referenzieren-->
+<!--Erklärung der Ordner und wie sie sich referenzieren
+LED, config, Programme, Test der Schnittstellen-->
 
 ## Raspberry Pi einrichten mit rpicam-reflector-tracking
 ### Raspberry Pi vorbereiten
