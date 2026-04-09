@@ -91,7 +91,7 @@ In diesem Projekt werden konkret die folgenden Apps verwendet.
 - `rpicam-hello`: zeigt ein Vorschaufenster an
 - `rpicam-vid`: nimmt ein Video auf
 
-Für die Apps stehen verschiedene Optionen zur Verfügung ([Übersicht](https://www.raspberrypi.com/documentation/computers/camera_software.html#rpicam-apps-options-reference)), die verwendeten sind hier aufgelistet.
+Für die Apps stehen verschiedene **Optionen** zur Verfügung ([Übersicht](https://www.raspberrypi.com/documentation/computers/camera_software.html#rpicam-apps-options-reference)), die verwendeten sind hier aufgelistet.
 
 | Option | Flag | Beschreibung |
 | --- | --- | --- |
@@ -101,11 +101,23 @@ Für die Apps stehen verschiedene Optionen zur Verfügung ([Übersicht](https://
 | post-process-libs | --post-process-libs | Gib den Speicherort der zu nutzenden Postprocessing-Stufen an |
 | post-process-file | --post-process-file | Gib eine JSON-Datei an, die das Postprocessing konfiguriert |
 | width | --width | Breite (Pixel) des Ausgangs (effektlos für `rpicam-hello`) |
-| height | --height | Höhe des (Pixel) Ausgangs (effektlos für `rpicam-hello`) |
+| height | --height | Höhe (Pixel) des Ausgangs (effektlos für `rpicam-hello`) |
 | viewfinder-width | --viefinder-width | Breite (Pixel) der Vorschau |
 | viewfinder-height | --viewfinder-height | Höhe (Pixel) der Vorschau |
 | framerate | --framerate | Bildrate |
 | shutter | --shutter | Belichtungszeit in Mikrosekunden |
+
+Der folgende Befehl startet für 30 Sekunden ein Vorschaufenster mit einer Belichtungszeit von 100 Mikrosekunden.
+
+```bash
+rpicam-hello -t 30s --shutter 100
+```
+
+<div align="center">
+<picture>
+<img src="/images/post_processing_pipeline.svg" alt="Strukturdiagramm. rpicam-apps steuert die Kamera, die frames an rpicam-hello oder rpicam-vid gibt. Innerhalb dieser können Postprocessing-Stufen (aus rpicam-apps und extern) hinzugefügt werden, die Bildmatrix und Metadaten verändern. Die Ausgabe erfolgt auf ein Vorschaufenster und bei rpicam-vid zusätzlich in eine Datei.">
+</picture>
+</div>
 
 <!--rpicam-apps (Apps, frame-Objekt mit Metadaten, post-processing Stufen)
 Algorithmus (Schwellenwertentfernung und helligkeitsgewichtetes Zentrum)-->
