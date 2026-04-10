@@ -184,25 +184,29 @@ rpicam-reflector-tracking/
 
 `configuration_camera.txt` wird der Option `config` übergeben um Videoeigenschaften der Kamera einzustellen, die für alle Programme in `programs` gleich sind. Die JSON-Dateien im Ordner `configuration_post_processing/` werden durch die Option `post-process-file` referenziert und konfigurieren, welche Postprocessing-Stufen genutzt werden.
 
-`set_leds`
+`set_leds` enthält *Python*-Dateien, um den LED-Ring zu steuern. Dazu wird die im Ordner enthaltene Bibliothek [Pi5Neo](https://github.com/vanshksingh/Pi5Neo/tree/main) genutzt. `clear_leds.py` deaktiviert die LEDs. `set_leds` setzt die alle LEDs des Rings auf eine festgelegte Farbe. Die Farbe kann mit den Flags `--r`, `--g` und `--b` (jeweils 0 bis 255) in der flogenden Form gesetzt werden.
+
+```bash
+./set_leds.py --r 70 -- g 30
+```
+
+Im Ordner `stl` befindet sich ein Modell der Halterung, die zur mechanischen Verbindung des LED-Rings mit dem Objektiv genutzt wird. `README.md` und `images/` dienen dieser Dokumentation.
 
 `interfaces` enthält *C++*-Programme, mit denen die Schnittstellen Ethernet, UART und PWM getestet werden können. So können Signale gesendet und auch empfangen werden. Insbesondere können diese Programme auch genutzt werden, um einen zweiten Raspberry Pi als Empfänger der über Ethernet oder UART gesendeten Positionsdaten zu verwenden, oder um den zum Marker Tracking genutzten Raspberry Pi über Ethernet zu steuern.
 
 **Programme in `interfaces`**
 
-| Datei | Funktion | Gerät |
+| Datei | Funktion | Vorgesehenes Gerät |
 | --- | --- | --- |
-| ethernet_await_start.cpp |  | Gerät mit Kamera |
-| ethernet_recv_byte |  | Gerät mit Kamera |
-| ethernet_recv_coor |  | Empfänger/Steuerungsgerät |
-| ethernet_send_byte |  | Empfänger/Steuerungsgerät |
-| ethernet_send_coor |  | Gerät mit Kamera |
-| pwm_clear |  | Gerät mit Kamera |
-| pwm_set_coor |  | Gerät mit Kamera |
-| uart_recv_coor |  | Empfänger/Steuerungsgerät |
-| uart_send_coor |  | Gerät mit Kamera |
-
-Im Ordner `stl` befindet sich ein Modell der Halterung, die zur mechanischen Verbindung des LED-Rings mit dem Objektiv genutzt wird. `README.md` und `images/` dienen dieser Dokumentation.
+| ethernet_await_start | Wartet bis `START`-Flag `0xAA` per Ethernet empfangen wird | Gerät mit Kamera |
+| ethernet_recv_byte | Empfängt ein Byte per Ethernet und gibt es aus (`cout`) | Gerät mit Kamera |
+| ethernet_recv_coor | Empfängt Positionen per Ethernet und gibt sie aus (`cout`) | Empfänger/Steuerungsgerät |
+| ethernet_send_byte | Sendet ein Byte per Ethernet (auch für `START`- und `STOP`-Flag) | Empfänger/Steuerungsgerät |
+| ethernet_send_coor | Sendet eine Position per Ethernet (Testzwecke) | Gerät mit Kamera |
+| pwm_clear | Deaktiviert die beiden Hardware-UART-Kanäle des Raspberry Pis | Gerät mit Kamera |
+| pwm_set_coor | Setzt den Tastgrad der beiden Hardware-PWM-Kanäle | Gerät mit Kamera |
+| uart_recv_coor | Empfängt Positionen per UART und gibt sie aus (`cout`) | Empfänger/Steuerungsgerät |
+| uart_send_coor | Sendet eine Position per UART (Testzwecke) | Gerät mit Kamera |
 
 ## Raspberry Pi einrichten mit rpicam-reflector-tracking
 ### Raspberry Pi vorbereiten
