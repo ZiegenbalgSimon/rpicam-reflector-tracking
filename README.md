@@ -184,7 +184,7 @@ rpicam-reflector-tracking/
 
 `configuration_camera.txt` wird der Option `config` übergeben um Videoeigenschaften der Kamera einzustellen, die für alle Programme in `programs` gleich sind. Die JSON-Dateien im Ordner `configuration_post_processing/` werden durch die Option `post-process-file` referenziert und konfigurieren, welche Postprocessing-Stufen genutzt werden.
 
-`set_leds` enthält *Python*-Dateien, um den LED-Ring zu steuern. Dazu wird die im Ordner enthaltene Bibliothek [Pi5Neo](https://github.com/vanshksingh/Pi5Neo/tree/main) genutzt. `clear_leds.py` deaktiviert die LEDs. `set_leds` setzt die alle LEDs des Rings auf eine festgelegte Farbe. Die Farbe kann mit den Flags `--r`, `--g` und `--b` (jeweils 0 bis 255) in der flogenden Form gesetzt werden.
+`set_leds` enthält *Python*-Dateien, um den LED-Ring zu steuern. Dazu wird die im Ordner enthaltene Bibliothek [Pi5Neo](https://github.com/vanshksingh/Pi5Neo/tree/main) genutzt. Die Steuerung funktioniert erfahrungsgemäß obwohl der Raspberry Pi 3,3&nbsp;V-Logk nutzt, der LED-Ring aber 5&nbsp;V-Logik. `clear_leds.py` deaktiviert die LEDs. `set_leds` setzt die alle LEDs des Rings auf eine festgelegte Farbe. Die Farbe kann mit den Flags `--r`, `--g` und `--b` (jeweils 0 bis 255) in der flogenden Form gesetzt werden.
 
 ```bash
 ./set_leds.py --r 70 -- g 30
@@ -398,37 +398,11 @@ meson compile -C build
 
 ## Eingerichteten Raspberry Pi zum Marker Tracking nutzen
 
-### Programme von rpicam-reflector-tracking
-
-Der Ordner `programs/` enthält diese Dateien.
-
-```text
-programs/
-├── tracking_cout.sh
-├── tracking_cout_vid.sh
-├── tracking_ethernet.sh
-├── tracking_ethernet_remote.sh
-├── tracking_pwm.sh
-└── tracking_uart.sh
-```
-
-Beispielsweise `tracking_ethernet_remote.sh` kann folgendermaßen ausgeführt werden.
-
-In `programs`-Ordner wechseln.
-
-```bash
-cd ~/rpicam-reflector-tracking/programs
-```
-
-`tracking_ethernet_remote.sh` ausführen.
-
-```bash
-./tracking_ethernet_remote.sh
-```
-
-
+Nach der [Einrichtung von rpicam-reflector-tracking](#rpicam-reflector-tracking-einrichten) können retroreflektive Marker getrackt werden, wie nachfolgend beschrieben.
 
 ### Konfiguratonsdateien von rpicam-reflector-tracking
+
+Die JSON-Dateien im Ordner `configuration/configuration_post_processing/` konfigurieren, welche Postprocessing-Stufen genutzt werden. Hier ist `configuration_ethernet.json` gezeigt.
 
 ```json
 {
@@ -446,8 +420,58 @@ cd ~/rpicam-reflector-tracking/programs
 }
 ```
 
+Bei Verwendung dieser JSON-Datei werden auf jeden Kameraframe die Postprocessing-Stufen `"marker_tracking_cv"`, `"position_ethernet"` und `"draw_centroid_cv"` in dieser Reihenfolge angewendet. Zusätzlich können jeweils Parameter der Stufen angepasst werden. Um eine weitere Stufe hinzuzufügen kann deren Name an der entsprechenden Stelle in der JSON-Datei hinzugefügt werden.
+
+**Liste der Konfigurationsdateien**
+
+| JSON-Datei | Postprocessing-Stufen |
+| --- | --- |
+| `configuration_cout.json` | `"marker_tracking_cv"`, `"position_cout"`, `"draw_centroid_cv"` |
+| `configuration_ethernet.json` | `"marker_tracking_cv"`, `"position_ethernet"`, `"draw_centroid_cv"` |
+| `configuration_pwm.json` | `"marker_tracking_cv"`, `"position_pwm"`, `"position_cout"`, `"draw_centroid_cv"` |
+| `configuration_uart.json` | `"marker_tracking_cv"`, `"position_uart"`, `"draw_centroid_cv"` |
+
+Die Postprocessing-Stufen sind in der [Erklärung von rpicam-reflector-tracking](#erklärung-von-rpicam-reflector-tracking) erklärt.
+
+### Programme von rpicam-reflector-tracking
+
+Wenn keine Anpassungen vorgenommen werden sollen, genügt zum Starten des Marker Trackings das Ausführen eines der Programme im `programs`-Ordner. Beispielsweise `tracking_ethernet_remote.sh` kann folgendermaßen ausgeführt werden.
+
+In `programs`-Ordner wechseln.
+
+```bash
+cd ~/rpicam-reflector-tracking/programs
+```
+
+`tracking_ethernet_remote.sh` ausführen.
+
+```bash
+./tracking_ethernet_remote.sh
+```
+
+In der folgenden Auflistung ist angegeben, welche Postprocessing-Stufen und welche Applikation die Programme jeweils nutzen. Mit der Erklärung der [Konfiguratonsdateien von rpicam-reflector-tracking](#konfiguratonsdateien-von-rpicam-reflector-tracking) erschließen sich daraus die Eigenschaften der Programme.
+
+| Program | Applikation | JSON-Datei |
+| --- | --- | --- |
+| `tracking_cout.sh` | `rpicam-hello` | `configuration_cout.json` |
+| `tracking_cout_vid.sh` | `rpicam-vid` | `configuration_cout.json` |
+| `tracking_ethernet.sh` | `rpicam-hello` | `configuration_ethernet.json` |
+| `tracking_ethernet_remote.sh` | `rpicam-hello` | `configuration_ethernet.json` |
+| `tracking_pwm.sh` | `rpicam-hello` | `configuration_pwm.json` |
+| `tracking_uart.sh` | `rpicam-hello` | `configuration_uart.json` |
+
+`tracking_ethernet_remote.sh` dient dazu, das Marker Tracking über Ethernet vom Empfänger beziehungsweise Steuerungsgerät aus steuern zu können. Wenn das Programm gestartet wird, wartet der Raspberry Pi mit Kamera, er die `START`-Flag per Ethernet empfängt. Daraufhin wird der LED-Ring aktiviert und `tracking_ethernet.sh` gestartet. Sobald die `STOP`-Flag per Ethernet empfangen wird wird das Marker Tracking beendet, der LED-Ring deaktiviert und erneut auf die `START`-Flag gewartet. 
+
+`tracking_cout_vid.sh` erstellt im `rpicam-marker-tracking`-Ordner einen Ordner `tracking_videos/`, falls dieser noch nicht existiert. Dort werden die aufgenommenen Videos gespeichert, wobei der Aufnahmezeitpunkt für den Dateinamen genutzt wird.
+
 ## Möglichkeiten zur Erweiterung des Projekts
+
+<!-- Verzerrungskorrektur, Ausreißerentfernung (blob testing), Geometrieprüfung -> in `marker_tracking_cv_stage.cpp`
+Form Tracken -> neue Stufe in `new_post_processing_stages/` (Metadaten + Ausgabe) und anwenden (Program + Konfiguration)
+Zweite Kamera (Stereo/Multi-view), wie verknüpfen -->
 
 ## Grundlagen der Arbeit mit Raspberry Pi
 
-<!-- dos2unix send_uart.py (Dateiformatierung) -->
+<!-- Bedienungsmöglichkeiten (Monitor, SSH, VNC, Raspberry Pi Connect), Tipp Hotspot
+Linux
+Befehlsliste -->
