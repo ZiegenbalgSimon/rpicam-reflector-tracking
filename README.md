@@ -287,38 +287,75 @@ ls /sys/class/pwm
 ```
 
 ### rpicam-reflector-tracking einrichten
+
+Um rpicam-reflector-tracking einzurichten muss zunächst der **Projektordner** aus diesem Repository nach `~` des Raspberry Pis **kopiert** werden. Falls der Projektordner an anderer Stelle gespeichert wird, muss in den aufgeführten Befehlen der Dateipfad angepasst werden. Nachdem die folgenden Schritte durchgeführt wurden, kann der Raspberry Pi zum Marker Tracking eingesetzt werden.
+
+In den Projektordner wechseln.
+
 ```bash
 cd ~/rpicam-reflector-tracking
 ```
+
+`rpicam-apps`-Ordner von GitHub klonen.
+
 ```bash
 git clone https://github.com/raspberrypi/rpicam-apps.git
 ```
+
+Ursprüngliche `meson.build`-Datei aus dem Ordner `rpicam-apps/` entfernen.
+
 ```bash
 rm rpicam-apps/meson.build
 ```
+
+`new_post_processing_stages/` und die neue `meson.build`-Datei in den Ordner `rpicam-apps/` verschieben.
+
 ```bash
 mv new_post_processing_stages rpicam-apps/
 mv meson.build rpicam-apps/
 ```
+
+`new_post_processing_stages/` wurde in den Ordner `rpicam-apps/` eingebettet, damit alle in den Postprocessing-Stufen referenzierten Dateien beim Kompilieren gefunden werden. Für das Kompilieren ist die `meson.build`-Datei zuständig.
+
+In den `rpicam-apps`-Ordner wechseln.
+
 ```bash
 cd ~/rpicam-reflector-tracking/rpicam-apps
 ```
+
+Kompilieren der Postprocessing-Stufen vorbereiten.
+
 ```bash
 meson setup build
 ```
+
+Postprocessing-Stufen kompilieren.
+
 ```bash
 meson compile -C build
 ```
+
+In den `rpicam-reflector-tracking`-Ordner wechseln.
+
 ```bash
 cd ~/rpicam-reflector-tracking
 ```
+
+Dateien in `programs/` und `set_leds/` Ausführungsberechtigungen zuweisen.
+
 ```bash
 chmod +x programs/*.sh
 chmod +x set_leds/*.py
 ```
+
+In `interfaces`-Ordner wechseln.
+
 ```bash
 cd ~/rpicam-reflector-tracking/interfaces
 ```
+
+*C++*-Dateien im `interfaces`-Ordner kompilieren.
+
 ```bash
 g++ ethernet_await_start.cpp -o ethernet_await_start
 g++ ethernet_recv_byte.cpp -o ethernet_recv_byte
@@ -331,12 +368,85 @@ g++ uart_recv_coor.cpp -o uart_recv_coor
 g++ uart_send_coor.cpp -o uart_send_coor
 ```
 
+**Modifikation von Postprocessing-Stufen**
+
+Die folgende Anleitung erklärt das Vorgehen, wenn die zusätzlichen Postprocessing-Stufen verändert wurden und erneut kompiliert werden sollen.
+
+In `rpicam-apps`-Ordner wechseln.
+
+```bash
+cd ~/rpicam-reflector-tracking/rpicam-apps
+```
+
+`build`-Ordner entfernen.
+
+```bash
+rm -rf build
+```
+
+Falls zu den Postprocessing-Stufen dieses Projektes eine weitere hinzugefüngt wurde und auch kompiliert werden soll, muss die `meson.build`-Datei bearbeitet werden.
+
+Postprocessing-Stufen kompilieren.
+
+```bash
+meson setup build
+```
+
+```bash
+meson compile -C build
+```
+
 ## Eingerichteten Raspberry Pi zum Marker Tracking nutzen
-<!-- Erklärung der Programme und Konfiguration -->
+
+### Programme von rpicam-reflector-tracking
+
+Der Ordner `programs/` enthält diese Dateien.
+
+```text
+programs/
+├── tracking_cout.sh
+├── tracking_cout_vid.sh
+├── tracking_ethernet.sh
+├── tracking_ethernet_remote.sh
+├── tracking_pwm.sh
+└── tracking_uart.sh
+```
+
+Beispielsweise `tracking_ethernet_remote.sh` kann folgendermaßen ausgeführt werden.
+
+In `programs`-Ordner wechseln.
+
+```bash
+cd ~/rpicam-reflector-tracking/programs
+```
+
+`tracking_ethernet_remote.sh` ausführen.
+
+```bash
+./tracking_ethernet_remote.sh
+```
+
+
+
+### Konfiguratonsdateien von rpicam-reflector-tracking
+
+```json
+{
+    "marker_tracking_cv": {
+        "threshold": 150
+    },
+    "position_ethernet": {
+        "ip": "192.168.1.2",
+        "port": 8080
+    },
+    "draw_centroid_cv": {
+        "radius": 16,
+        "thickness": 2
+    }
+}
+```
 
 ## Möglichkeiten zur Erweiterung des Projekts
-
-<!-- Modifikation der Postprocessing-Stufen -->
 
 ## Grundlagen der Arbeit mit Raspberry Pi
 
