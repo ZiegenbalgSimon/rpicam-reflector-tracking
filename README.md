@@ -209,16 +209,83 @@ Im Ordner `stl` befindet sich ein Modell der Halterung, die zur mechanischen Ver
 | uart_send_coor | Sendet eine Position per UART (Testzwecke) | Gerät mit Kamera |
 
 ## Raspberry Pi einrichten mit rpicam-reflector-tracking
+
+Voraussetzung für die Nutzung von rpicam-reflector-tracking ist ein ein Raspberry Pi mit dem Betriebssystem Raspberry Pi OS. Dieses kann gemäß [Dokumentation](https://www.raspberrypi.com/documentation/computers/getting-started.html#installing-the-operating-system) mithilfe des Raspberry Pi Imagers installiert werden. Bereits im Raspberry Pi Imager können WLAN und, abhängig von der geplanten Nutzung, SSH, VNC und Raspberry Pi Connect konfiguriert werden.
+
 ### Raspberry Pi vorbereiten
+
+Raspberry Pi OS kann auf der grafischen Benutzeroberfläche (GUI) in den Einstellungen konfiguriert werden. Falls noch nicht während der Installation geschehen, kann hier eine WLAN-Verbindung eingerichtet werden.
+
+In den [Interface options](https://www.raspberrypi.com/documentation/computers/configuration.html#interfacing-options) können `SSH` und `VNC` aktiviert werden, falls sie genutzt werden sollen. Zur Steuerung des LED-Rings mithilfe con `Pi5Neo` muss hier `SPI` aktiviert werden. Zur Verwendung von UART zur Datenübertragung sollte `Serial Port` aktiviert und `Serial console` deaktiviert werden.
+
+Um die zusätzlichen Postprocessing-Stufen kompilieren zu können müssen die folgenden Abhängigkeiten und Packages installiert werden.
+
 ```bash
 sudo apt install -y libcamera-dev libepoxy-dev libjpeg-dev libtiff5-dev libpng-dev libopencv-dev
 sudo apt install -y qtbase5-dev libqt5core5a libqt5gui5 libqt5widgets5
 sudo apt install libavcodec-dev libavdevice-dev libavformat-dev libswresample-dev
-```
-```bash
-sudo apt install -y cmake libboost-program-options-dev libdrm-dev libexif-dev
+sudo apt install -y cmake libboost-all-dev libdrm-dev libexif-dev
 sudo apt install -y meson ninja-build
 ```
+
+**Ethernet**
+
+Um Ethernet zur Übertragung der Position zu nutzen, wird für den Raspberry Pi im lokalen Netzwerk `eth0` die statische IP-Adresse `192.168.1.1` gesetzt.
+
+```bash
+sudo nmcli con add type ethernet ifname eth0 con-name eth0-static ip4 192.168.1.1/24
+sudo nmcli con up eth0-static
+```
+
+Ob die Adresse korrekt gesetzt wurde kann mit diesem Befehl geprüft werden.
+
+```bash
+ip a
+```
+
+Für den Empfänger ist im lokalen Netzwerk die IP-Adresse `192.168.1.2` zu setzen. Ob der Raspberry Pi zum Empfänger eine Verbindung herstellen kann, kann folgendermaßen geprüft werden.
+
+```bash
+ping 192.168.1.2
+```
+
+Falls die IP-Adresse zu einem späteren Zeitpunkt geändert werden soll, kann der folgende Befehl genutzt werden.
+
+```bash
+sudo nmcli con modify eth0-static ipv4.addresses [new_ip]/24
+sudo nmcli con up eth0-static
+```
+
+**PWM**
+
+Um die Harware-PWM-Kanäle des Raspberry Pis nutzen zu können, sind die folgenden Schritte zu befolgen.
+
+1. Konfigurationsdatei zur Bearbeitung öffnen.
+
+```bash
+sudo nano /boot/firmware/config.txt 
+```
+
+2. Folgenden Ausdruck unten in die Konfigurationsdatei einfügen.
+
+```text
+dtoverlay=pwm-2chan
+```
+
+3. Änderung mit `Strg+O` speichern und Editor mit `Strg+X` schließen.
+
+4. Raspberry Pi neustarten
+
+```bash
+sudo shutdown -r now
+```
+
+5. Nach korrekter Konfiguration gibt der folgende Befehl `pwmchip0` zurück.
+
+```bash
+ls /sys/class/pwm
+```
+
 ### rpicam-reflector-tracking einrichten
 ```bash
 cd ~/rpicam-reflector-tracking
@@ -269,4 +336,8 @@ g++ uart_send_coor.cpp -o uart_send_coor
 
 ## Möglichkeiten zur Erweiterung des Projekts
 
+<!-- Modifikation der Postprocessing-Stufen -->
+
 ## Grundlagen der Arbeit mit Raspberry Pi
+
+<!-- dos2unix send_uart.py (Dateiformatierung) -->
