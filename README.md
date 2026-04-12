@@ -1,11 +1,3 @@
-<!--
-- Erklärung Projekt (Hintergrund rpicam-apps, Erklärung der Stufen, LED, config, Programme, Test der Schnittstellen)
-- Pi einrichten (von neu, Konfiguration des Betriebssystems, Tracking-Software einrichten)
-- Eingerichteten Pi bedienen
-- Erweiterungsmöglichkeiten
-- Raspberry Pi-Grundlagen (wichtige Linux-Befehle, Bedienungsmöglichkeiten)
--->
-
 # rpicam-reflector-tracking
 
 Das Projekt rpicam-reflector-tracking dient dazu, mit einem **Raspberry Pi** kamerabasiert und in Echtzeit die Position eines **retroreflektiven Markers** zu verfolgen. Es stellt verschiedene **Schnittstellen** zur Übertragung der ermittelten Position zur Verfügung.
@@ -69,7 +61,7 @@ Stromversorgung und Steuerung des LED-Rings funktionieren über die GPIO-Anschlu
 Um **UART** (*Universal Asynchronous Receiver Transmitter*) als serielle Schnittstelle zur Datenübertragung zu nutzen ist ein gemeinsames Nullniveau herzustellen (z.B. an `Pin 6 (Ground)`). Zum Senden (*Transmit*) dient `GPIO 14 (UART0 TX)`, zum Empfangen (*Receive*) `GPIO 15 (UART0 RX)`.
 
 > [!WARNING]
-> Der Raspberry Pi nutzt TTL-Pegel mit 0&nbsp;V als `LOW` und +3,3&nbsp;V als `HIGH`. Den Rsapberry Pi an eine Schnittstelle anzuschließen, die andere Spannungspegel nutzt, kann zu Schäden führen.
+> Der Raspberry Pi nutzt TTL-Pegel mit 0&nbsp;V als `LOW` und +3,3&nbsp;V als `HIGH`. Den Raspberry Pi an eine Schnittstelle anzuschließen, die andere Spannungspegel nutzt, kann zu Schäden führen.
 
 Der Raspberry Pi verfügt über zwei Hardware-**PWM**-Kanäle (*Pulsweitenmodulation*), die an `GPIO 18 (PWM0)` und `GPIO 19 (PWM1)` ausgegeben werden. Um zu validieren, dass PWM-Signale abhängig von der Position des Markers erzeugt werden, kann die folgende einfache Schaltung angeschlossen werden. Die Helligkeit der LEDs verändert sich hierbei mit der Pulsweite, die abhängig von der Position des Markers gesetzt wird.
 
@@ -156,8 +148,7 @@ Die von den Postprocessing-Stufen `"position_ethernet"`, `"position_cout"` und `
 | `"position_pwm"` | `"period"`&nbsp;(100000), `"frame_width"`&nbsp;(1456), `"frame_height"`&nbsp;(1088) |
 
 ### Projektstruktur
-<!--Erklärung der Ordner und wie sie sich referenzieren
-LED, config, Programme, Test der Schnittstellen-->
+
 Nachdem [rpicam-reflector-tracking einrichten](#rpicam-reflector-tracking-einrichten) befolgt wurde, liegt auf dem Raspberry Pi die folgende Ornderstruktur vor.
 
 ```text
@@ -184,7 +175,7 @@ rpicam-reflector-tracking/
 
 `configuration_camera.txt` wird der Option `config` übergeben um Videoeigenschaften der Kamera einzustellen, die für alle Programme in `programs` gleich sind. Die JSON-Dateien im Ordner `configuration_post_processing/` werden durch die Option `post-process-file` referenziert und konfigurieren, welche Postprocessing-Stufen genutzt werden.
 
-`set_leds` enthält *Python*-Dateien, um den LED-Ring zu steuern. Dazu wird die im Ordner enthaltene Bibliothek [Pi5Neo](https://github.com/vanshksingh/Pi5Neo/tree/main) genutzt. Die Steuerung funktioniert erfahrungsgemäß obwohl der Raspberry Pi 3,3&nbsp;V-Logk nutzt, der LED-Ring aber 5&nbsp;V-Logik. `clear_leds.py` deaktiviert die LEDs. `set_leds` setzt die alle LEDs des Rings auf eine festgelegte Farbe. Die Farbe kann mit den Flags `--r`, `--g` und `--b` (jeweils 0 bis 255) in der flogenden Form gesetzt werden.
+`set_leds` enthält *Python*-Dateien, um den LED-Ring zu steuern. Dazu wird die im Ordner enthaltene Bibliothek [Pi5Neo](https://github.com/vanshksingh/Pi5Neo/tree/main) genutzt. Die Steuerung funktioniert erfahrungsgemäß obwohl der Raspberry Pi 3,3&nbsp;V-Logk nutzt, der LED-Ring aber 5&nbsp;V-Logik. `clear_leds.py` deaktiviert die LEDs. `set_leds` setzt die alle LEDs des Rings auf eine festgelegte Farbe. Die Farbe kann mit den Flags `--r`, `--g` und `--b` (jeweils 0 bis 255) in der folgenden Form gesetzt werden.
 
 ```bash
 ./set_leds.py --r 70 -- g 30
@@ -368,7 +359,7 @@ g++ uart_recv_coor.cpp -o uart_recv_coor
 g++ uart_send_coor.cpp -o uart_send_coor
 ```
 
-**Modifikation von Postprocessing-Stufen**
+<a name="modifikation-von-postprocessing-stufen">**Modifikation von Postprocessing-Stufen**</a>
 
 Die folgende Anleitung erklärt das Vorgehen, wenn die zusätzlichen Postprocessing-Stufen verändert wurden und erneut kompiliert werden sollen.
 
@@ -466,12 +457,121 @@ In der folgenden Auflistung ist angegeben, welche Postprocessing-Stufen und welc
 
 ## Möglichkeiten zur Erweiterung des Projekts
 
-<!-- Verzerrungskorrektur, Ausreißerentfernung (blob testing), Geometrieprüfung -> in `marker_tracking_cv_stage.cpp`
-Form Tracken -> neue Stufe in `new_post_processing_stages/` (Metadaten + Ausgabe) und anwenden (Program + Konfiguration)
-Zweite Kamera (Stereo/Multi-view), wie verknüpfen -->
+**Robustes Marker Tracking**
+
+Die Postprocessing-Stufe `marker_tracking_cv` nutzt eine Schwellenwertentfernung gefolgt von der Berechnung des helligkeitsgewichteten Zentrums. Dieser Algorithmus basiert auf dem Paper
+
+```text
+Shortis, M.R., Clarke, T.A., Short, T. 1994., A comparison of some techniques for the subpixel location of discrete target images, Videometrics III. SPIE Vol. 2350. Boston. pp. 239-250.
+```
+
+Um die Markererkennung robuster zu gestalten könnte `marker_tracking_cv` erweitert werden. Nach (Shortis, M.R. et al., 1994) könnten dazu Ausreißerpixel entfernt werden, deren Helligkeit oberhalb des Schwellenwertes liegt, ohne in einer Ansammlung heller Pixel zu liegen (*blob testing*). Außerdem könnte die Geometrie der als Marker identifizierten Pixelansammlung geprüft werden (Shortis, M.R. et al., 1994). Zudem bietet [OpenCV](https://docs.opencv.org/4.x/d1/dfb/intro.html) Funktionen mit denen es mögliche wäre, Verzerrungen des Objektives zu korrigieren.
+
+**Tracking einer Form statt eines Punktes**
+
+Um statt der Position eines Markermitelpunktes die Form eines Objektes zu beobachten müsste eine entsprechende neue Postprocessing-Stufe programmiert und im Ordner `new_post_processing_stages/` abgelegt werden. Diese Stufe könnte beispielsweise Koeffizienten der polynomialen Mittellinie einer Form in die Metadaten des Frames schreiben. Die Übertragung dieser Information könnte äquivalent zur Übertragung in diese Projekt als zusätzliche Postprocessing-Stufe implementiert werden. Die Postprocessing-Stufen müssten [neu kompiliert werden](#modifikation-von-postprocessing-stufen). Außerdem wären eine entsprechende Konfigurationsdatei und eine *Shell*-Datei im `programs`-Ordner vorzusehen.
+
+**Nutzung einer zweiten Kamera**
+
+Um dreidimensionals Tracking zu ermöglichen, könnte eine zweite Kamera hizugefügt werden. Denkbar sind sowohl ein Stereo-Setup mit parallel ausgerichteten Kameras, und rechtwinklig zueinander ausgerichtete Kameras denkbar. Raspberry Pi Global Shutter Kameras können auf zwei verschiedenen Wegen synchronisiert werden:
+
+- [Synchronisation mittels externem Trigger](https://www.raspberrypi.com/documentation/accessories/camera.html#external-trigger)
+- [Software-Kamerasynchronisation](https://www.raspberrypi.com/documentation/computers/camera_software.html#software-camera-synchronisation)
+
+Die Informationen der beiden Kameras können entweder auf dem Raspberry Pi zusammengeführt werden, oder getrennt an ein Verarbeitungsgerät übertragen werden. Bei Verarbeitung auf dem Raspberry Pi ist die Nutzung von [OpenCV](https://docs.opencv.org/4.x/d1/dfb/intro.html)-Funktionen möglich.
 
 ## Grundlagen der Arbeit mit Raspberry Pi
 
-<!-- Bedienungsmöglichkeiten (Monitor, SSH, VNC, Raspberry Pi Connect), Tipp Hotspot
-Linux
-Befehlsliste -->
+Raspberry Pi OS ist eine **Linux**-Distribution mit grafischer Benutzeroberfläche (GUI). Diese Dokumentation beschreibt eine *textbasierte* Bedienung über das **Terminal**. Für Personen ohne Vorerfahrung sind online viele Ressourcen zum Lernen von Linux bezehungsweise der Arbeit mit Command Line Interfaces (CLI) verfügbar.
+
+### Möglichkeiten zur Steuerung des Raspberry Pis
+
+**Monitor**
+
+Über die (micro) HDMI-Buchse kann ein Bildschirm an den Raspberry Pi angeschlossen werden. Über eine angeschlossene Maus und Tastatur kann dieser direkt gesteuert werden.
+
+Alternativ kann eine der folgenden Methoden zur [Fernsteuerung](https://www.raspberrypi.com/documentation/computers/remote-access.html) genutzt werden. **SSH** und **VNC** erfordern, dass sich der Raspberry Pi und das zur Steuerung genutzte Gerät im gleichen WLAN befinden.
+
+> [!TIP]
+> Als gemeinsames WLAN kann auch ein mobiler Hotspot genutzt werden.
+
+**SSH**
+
+SSH (**S**ecure **SH**ell) liefert ein Command Line Interface (**CLI**) zur Fernsteuerung des Raspberry Pis auf einem anderen Gerät. Zum Öffnen des Zugangs ist auf dem zur Steuerung genutzte Gerät ein Terminal zu öffnen (z.B. *PowerShell* auf Windows-Geräten) und ein Befehl der folgenden Form auszuführen.
+
+```bash
+ssh <username>@<hostname>.local
+```
+
+Nach Eingabe des Passworts können Befehle auf dem Raspberry Pi ausgeführt werden. Statt `<hostname>.local` kann auch die IP-Adresse genutzt werden. *PowerShell* kann auf Windows-Geräten durch Rechtsklick in einem gewünschten Ordner direkt an dieser Stelle geöffnet werden. Mehr Informationen zu **SSH** liefert die [Raspberry Pi Dokumentation](https://www.raspberrypi.com/documentation/computers/remote-access.html#ssh).
+
+Mit SCP (**S**ecure **C**opy **P**rotocol) können Dateien vom Raspberry Pi auf das zur Steuerung genutzte Gerät kopiert werden und umgekehrt ([Raspberry Pi Dokumentation](https://www.raspberrypi.com/documentation/computers/remote-access.html#scp)). Dieser Befehl kopiert eine angegebene Datei vom Raspberry Pi in das aktuelle Arbeitsverzeichnis auf einem Windows-Gerät. `..` wird dabei in relativen Dateipfaden genutzt und meint das nächste übergeordnete Verzeichnis.
+
+```bash
+scp <username>@<hostname>.local:<file path> ..\
+```
+
+> [!IMPORTANT]
+> Auf Linux-Geräten wird `/` für Dateipfade genutzt, auf Windows-Geräten `\`.
+
+Gleichermaßen kann von einem Windos-Gerät auf den Raspberry Pi kopiert werden. Hier wird die Flag `-r` (*rekursiv*) genutzt, um einen ganzen Ordner zu kopieren.
+
+```bash
+scp -r ..\<folder> <username>@<hostname>.local:<file path>
+```
+
+**VNC**
+
+VNC (**V**irtual **N**etwork **C**omputing) teilt den gesamten Bildschirm des Raspberry Pis und somit auch die GUI. Es erfordert die Installation eines entsprechenden Programms auf das zur Steuerung genutzte Gerät und ein von beiden Geräten genutztes Netzwerk. Weitere Informationen liefert die [Raspberry Pi Dokumentation](https://www.raspberrypi.com/documentation/computers/remote-access.html#vnc).
+
+**Raspberry Pi Connect**
+
+Mit Raspberry Pi Connect kann auf einen Raspberry Pi auch aus einem anderen Netzwerk heraus über einen Browser zugegriffen werden. Erforderlich ist hierfür ein entsprechender **Account**. Informationen finden sich in der [Raspberry Pi Dokumentation](https://www.raspberrypi.com/documentation/services/connect.html).
+
+### Wichtige Befehle
+
+Der Software des Raspberry Pis sollte regelmäßig folgendermaßen **aktualisiert** werden.
+
+```bash
+sudo apt update
+sudo apt full-upgrade
+```
+
+Vor Ziehen des Steckers sollte der Raspberry Pi **heruntergefahren** werden. Über das Terminal geht das folgendermaßen.
+
+```bash
+sudo shutdown -h now
+```
+
+Dies ist der Befehl für einen **Neustart**.
+
+```bash
+sudo shutdown -r now
+```
+
+Die folgende Tabelle enthält Befehle, die für den Anwendungsfall dieses Projektes relevant sind.
+
+| Command | Erklärung |
+| --- | --- |
+| `cd <directory>` | Verzeichnis wechseln (absoluter oder relativer Pfad) |
+| `chmod +x <program>` | Berechtigungen ändern (`+x` fügt Ausführungsberechtigung hinzu) |
+| `clear` | Terminal leeren |
+| `cp` <file> <new name/path> | Datei kopieren |
+| `ip a` | Netzwerkverbindungen anzeigen |
+| `ls` | Inhalte des aktuellen Arbeitsverzeichnisses auflisten |
+| `ls -l` | `-l`-Flag listet Berechtigungen mit auf |
+| `mkdir <name>` | Verzeichnis erstellen |
+| `mv` <file> <new name/path> | Datei verschieben |
+| `nano <program>` | `nano`-Editor zum Bearbeiten einer Datei öffnen (`Strg+O` zum Speichern, `Strg+X` zum verlassen) |
+| `ping <ip address>` | Antwortzeit eines Gerätes im Netzwerk ausgeben (wenn erreichbar) |
+| `rm <file>` | Datei löschen |
+| `rm -rf <folder>` | Ordner löschen |
+| `sudo apt install <package>` | Package installieren |
+
+`Strg+C` terminiert Programme, die vom Terminal aus gestartet wurden.
+
+`sudo` (*superuser do*) wird genutzt um Befehle mit Administratorrechten auszuführen.
+
+`*` in Dateinamen stehen stellvertretend für beliebigen Text. `*.mp4` beispielsweise meint alle MP4-Dateien im aktuellen Abeitsverzeichnis.
+
+Viele Befehle verfügen über die `help`-Option (Flag `-h`), die eine Erklärung des Befehls und der verfügbaren Optionen ausgeben.
