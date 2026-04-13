@@ -482,7 +482,9 @@ Die Informationen der beiden Kameras können entweder auf dem Raspberry Pi zusam
 
 ## Grundlagen der Arbeit mit Raspberry Pi
 
-Raspberry Pi OS ist eine **Linux**-Distribution mit grafischer Benutzeroberfläche (GUI). Diese Dokumentation beschreibt eine *textbasierte* Bedienung über das **Terminal**. Für Personen ohne Vorerfahrung sind online viele Ressourcen zum Lernen von Linux bezehungsweise der Arbeit mit Command Line Interfaces (CLI) verfügbar.
+Dieser Abschnitt soll Personen ohne Vorerfahrung den Einstieg in die Arbeit mit Raspberry Pi erleichtern.
+
+Raspberry Pi OS ist eine **Linux**-Distribution mit grafischer Benutzeroberfläche (GUI). Diese Dokumentation beschreibt eine *textbasierte* Bedienung über das **Terminal**. Zum Lernen von Linux bezehungsweise der Arbeit mit Command Line Interfaces (CLI) sind online viele Ressourcen verfügbar.
 
 ### Möglichkeiten zur Steuerung des Raspberry Pis
 
