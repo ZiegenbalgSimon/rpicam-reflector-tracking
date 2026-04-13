@@ -418,7 +418,7 @@ Die JSON-Dateien im Ordner `configuration/configuration_post_processing/` konfig
 }
 ```
 
-Bei Verwendung dieser JSON-Datei werden auf jeden Kameraframe die Postprocessing-Stufen `"marker_tracking_cv"`, `"position_ethernet"` und `"draw_centroid_cv"` in dieser Reihenfolge angewendet. Zusätzlich können jeweils Parameter der Stufen angepasst werden. Um eine weitere Stufe hinzuzufügen kann deren Name an der entsprechenden Stelle in der JSON-Datei hinzugefügt werden.
+Bei Verwendung dieser JSON-Datei werden auf jeden Kameraframe die Postprocessing-Stufen `"marker_tracking_cv"`, `"position_ethernet"` und `"draw_centroid_cv"` in dieser Reihenfolge angewendet. Zusätzlich können jeweils Parameter der Stufen angepasst werden. Um eine weitere Stufe hinzuzufügen, kann deren Name an der entsprechenden Stelle in der JSON-Datei hinzugefügt werden.
 
 **Liste der Konfigurationsdateien**
 
@@ -458,34 +458,34 @@ In der folgenden Auflistung ist angegeben, welche Postprocessing-Stufen und welc
 | `tracking_pwm.sh` | `rpicam-hello` | `configuration_pwm.json` |
 | `tracking_uart.sh` | `rpicam-hello` | `configuration_uart.json` |
 
-`tracking_ethernet_remote.sh` dient dazu, das Marker Tracking über Ethernet vom Empfänger beziehungsweise Steuerungsgerät aus steuern zu können. Wenn das Programm gestartet wird, wartet der Raspberry Pi mit Kamera, er die `START`-Flag per Ethernet empfängt. Daraufhin wird der LED-Ring aktiviert und `tracking_ethernet.sh` gestartet. Sobald die `STOP`-Flag per Ethernet empfangen wird wird das Marker Tracking beendet, der LED-Ring deaktiviert und erneut auf die `START`-Flag gewartet. 
+`tracking_ethernet_remote.sh` dient dazu, das Marker Tracking über Ethernet vom Empfänger beziehungsweise Steuerungsgerät aus steuern zu können. Wenn das Programm gestartet wird, wartet der Raspberry Pi mit Kamera, bis er die `START`-Flag per Ethernet empfängt. Daraufhin wird der LED-Ring aktiviert und `tracking_ethernet.sh` gestartet. Sobald die `STOP`-Flag per Ethernet empfangen wird, wird das Marker Tracking beendet, der LED-Ring deaktiviert und erneut auf die `START`-Flag gewartet. 
 
-`tracking_cout_vid.sh` erstellt im `rpicam-marker-tracking`-Ordner einen Ordner `tracking_videos/`, falls dieser noch nicht existiert. Dort werden die aufgenommenen Videos gespeichert, wobei der Aufnahmezeitpunkt für den Dateinamen genutzt wird.
+`tracking_cout_vid.sh` erstellt im `rpicam-reflector-tracking`-Ordner einen Ordner `tracking_videos/`, falls dieser noch nicht existiert. Dort werden die aufgenommenen Videos gespeichert, wobei für den Dateinamen der Aufnahmezeitpunkt genutzt wird.
 
 ## Möglichkeiten zur Erweiterung des Projekts
 
 **Robustes Marker Tracking**
 
-Die Postprocessing-Stufe `marker_tracking_cv` nutzt eine Schwellenwertentfernung gefolgt von der Berechnung des helligkeitsgewichteten Zentrums. Dieser Algorithmus basiert auf dem Paper
+Die Postprocessing-Stufe `"marker_tracking_cv"` nutzt eine Schwellenwertentfernung gefolgt von der Berechnung des helligkeitsgewichteten Zentrums. Dieser Algorithmus basiert auf dem Paper
 
 ```text
 Shortis, M.R., Clarke, T.A., Short, T. 1994., A comparison of some techniques for the subpixel location of discrete target images, Videometrics III. SPIE Vol. 2350. Boston. pp. 239-250.
 ```
 
-Um die Markererkennung robuster zu gestalten könnte `marker_tracking_cv` erweitert werden. Nach (Shortis, M.R. et al., 1994) könnten dazu Ausreißerpixel entfernt werden, deren Helligkeit oberhalb des Schwellenwertes liegt, ohne in einer Ansammlung heller Pixel zu liegen (*blob testing*). Außerdem könnte die Geometrie der als Marker identifizierten Pixelansammlung geprüft werden (Shortis, M.R. et al., 1994). Zudem bietet [OpenCV](https://docs.opencv.org/4.x/d1/dfb/intro.html) Funktionen mit denen es mögliche wäre, Verzerrungen des Objektives zu korrigieren.
+Um die Markererkennung robuster zu gestalten, könnte `"marker_tracking_cv"` erweitert werden. Nach (Shortis, M.R. et al., 1994) könnten dazu Ausreißerpixel entfernt werden, deren Helligkeit oberhalb des Schwellenwertes liegt, ohne in einer Ansammlung heller Pixel zu liegen (*blob testing*). Außerdem könnte die Geometrie der als Marker identifizierten Pixelansammlung geprüft werden (Shortis, M.R. et al., 1994). Zudem bietet [OpenCV](https://docs.opencv.org/4.x/d1/dfb/intro.html) Funktionen mit denen es mögliche wäre, Verzerrungen des Objektives zu korrigieren.
 
 **Tracking einer Form statt eines Punktes**
 
-Um statt der Position eines Markermitelpunktes die Form eines Objektes zu beobachten müsste eine entsprechende neue Postprocessing-Stufe programmiert und im Ordner `new_post_processing_stages/` abgelegt werden. Diese Stufe könnte beispielsweise Koeffizienten der polynomialen Mittellinie einer Form in die Metadaten des Frames schreiben. Die Übertragung dieser Information könnte äquivalent zur Übertragung in diese Projekt als zusätzliche Postprocessing-Stufe implementiert werden. Die Postprocessing-Stufen müssten [neu kompiliert werden](#modifikation-von-postprocessing-stufen). Außerdem wären eine entsprechende Konfigurationsdatei und eine *Shell*-Datei im `programs`-Ordner vorzusehen.
+Um statt der Position eines Markermitelpunktes die Form eines Objektes zu beobachten, müsste eine entsprechende neue Postprocessing-Stufe programmiert und im Ordner `new_post_processing_stages/` abgelegt werden. Diese Stufe könnte beispielsweise Koeffizienten der polynomialen Mittellinie einer Form in die Metadaten des Frames schreiben. Die Übertragung dieser Information könnte äquivalent zur Übertragung in diese Projekt als zusätzliche Postprocessing-Stufe implementiert werden. Die Postprocessing-Stufen müssten [neu kompiliert werden](#modifikation-von-postprocessing-stufen). Außerdem wären eine entsprechende Konfigurationsdatei und eine *Shell*-Datei im `programs`-Ordner vorzusehen.
 
 **Nutzung einer zweiten Kamera**
 
-Um dreidimensionals Tracking zu ermöglichen, könnte eine zweite Kamera hizugefügt werden. Denkbar sind sowohl ein Stereo-Setup mit parallel ausgerichteten Kameras, und rechtwinklig zueinander ausgerichtete Kameras denkbar. Raspberry Pi Global Shutter Kameras können auf zwei verschiedenen Wegen synchronisiert werden:
+Um dreidimensionals Tracking zu ermöglichen, könnte eine zweite Kamera hizugefügt werden. Denkbar sind sowohl ein Stereo-Setup mit parallel ausgerichteten Kameras, als auch zwei rechtwinklig zueinander ausgerichtete Kameras. Raspberry Pi Global Shutter Kameras können auf zwei verschiedenen Wegen synchronisiert werden:
 
 - [Synchronisation mittels externem Trigger](https://www.raspberrypi.com/documentation/accessories/camera.html#external-trigger)
 - [Software-Kamerasynchronisation](https://www.raspberrypi.com/documentation/computers/camera_software.html#software-camera-synchronisation)
 
-Die Informationen der beiden Kameras können entweder auf dem Raspberry Pi zusammengeführt werden, oder getrennt an ein Verarbeitungsgerät übertragen werden. Bei Verarbeitung auf dem Raspberry Pi ist die Nutzung von [OpenCV](https://docs.opencv.org/4.x/d1/dfb/intro.html)-Funktionen möglich.
+Die aus den beiden Kamera-Streams gewonnenen Informationen können entweder auf dem Raspberry Pi zusammengeführt werden, oder getrennt an ein Verarbeitungsgerät übertragen werden. Bei Verarbeitung auf dem Raspberry Pi ist die Nutzung von [OpenCV](https://docs.opencv.org/4.x/d1/dfb/intro.html)-Funktionen möglich.
 
 ## Grundlagen der Arbeit mit Raspberry Pi
 
@@ -497,22 +497,24 @@ Raspberry Pi OS ist eine **Linux**-Distribution mit grafischer Benutzeroberfläc
 
 **Monitor**
 
-Über die (micro) HDMI-Buchse kann ein Bildschirm an den Raspberry Pi angeschlossen werden. Über eine angeschlossene Maus und Tastatur kann dieser direkt gesteuert werden.
+Über die (micro) HDMI-Buchse kann ein Bildschirm an den Raspberry Pi angeschlossen werden. Über eine angeschlossene Maus und Tastatur kann der Raspberry Pi direkt gesteuert werden.
 
-Alternativ kann eine der folgenden Methoden zur [Fernsteuerung](https://www.raspberrypi.com/documentation/computers/remote-access.html) genutzt werden. **SSH** und **VNC** erfordern, dass sich der Raspberry Pi und das zur Steuerung genutzte Gerät im gleichen WLAN befinden.
+Alternativ kann eine der folgenden Methoden zur [Fernsteuerung](https://www.raspberrypi.com/documentation/computers/remote-access.html) genutzt werden.
 
 > [!TIP]
-> Als gemeinsames WLAN kann auch ein mobiler Hotspot genutzt werden.
+> SSH und VNC erfordern, dass sich der Raspberry Pi und das zur Steuerung genutzte Gerät im gleichen WLAN befinden. Als gemeinsames WLAN kann auch ein mobiler Hotspot genutzt werden.
 
 <a name="ssh"></a>**SSH**
 
-SSH (*Secure Shell*) liefert ein Command Line Interface (**CLI**) zur Fernsteuerung des Raspberry Pis auf einem anderen Gerät. Zum Öffnen des Zugangs ist auf dem zur Steuerung genutzte Gerät ein Terminal zu öffnen (z.B. *PowerShell* auf Windows-Geräten) und ein Befehl der folgenden Form auszuführen.
+SSH (*Secure Shell*) liefert auf einem anderen Gerät ein Command Line Interface (**CLI**) zur Fernsteuerung des Raspberry Pis. Zum Öffnen des Zugangs ist auf dem zur Steuerung genutzte Gerät ein Terminal zu öffnen (z.B. *PowerShell* auf Windows-Geräten) und ein Befehl der folgenden Form auszuführen.
 
 ```bash
 ssh <username>@<hostname>.local
 ```
 
 Nach Eingabe des Passworts können Befehle auf dem Raspberry Pi ausgeführt werden. Statt `<hostname>.local` kann auch die IP-Adresse genutzt werden. *PowerShell* kann auf Windows-Geräten durch Rechtsklick in einem gewünschten Ordner direkt an dieser Stelle geöffnet werden. Mehr Informationen zu **SSH** liefert die [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/computers/remote-access.html#ssh).
+
+**SCP**
 
 Mit SCP (*Secure Copy Protocol*) können Dateien vom Raspberry Pi auf das zur Steuerung genutzte Gerät kopiert werden und umgekehrt ([Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/computers/remote-access.html#scp)). Dieser Befehl kopiert eine angegebene Datei vom Raspberry Pi in das aktuelle Arbeitsverzeichnis auf einem Windows-Gerät. `..` wird dabei in relativen Dateipfaden genutzt und meint das nächste übergeordnete Verzeichnis.
 
@@ -523,7 +525,7 @@ scp <username>@<hostname>.local:<file path> ..\
 > [!IMPORTANT]
 > Auf Linux-Geräten wird `/` für Dateipfade genutzt, auf Windows-Geräten `\`.
 
-Gleichermaßen kann von einem Windos-Gerät auf den Raspberry Pi kopiert werden. Hier wird die Flag `-r` (*rekursiv*) genutzt, um einen ganzen Ordner zu kopieren.
+Gleichermaßen kann von einem Windos-Gerät auf den Raspberry Pi kopiert werden. Hier wird beispielhaft die Flag `-r` (*rekursiv*) genutzt, um einen ganzen Ordner zu kopieren.
 
 ```bash
 scp -r ..\<folder> <username>@<hostname>.local:<file path>
@@ -565,22 +567,19 @@ Die folgende Tabelle enthält Befehle, die für den Anwendungsfall dieses Projek
 | `cd <directory>` | Verzeichnis wechseln (absoluter oder relativer Pfad) |
 | `chmod +x <program>` | Berechtigungen ändern (`+x` fügt Ausführungsberechtigung hinzu) |
 | `clear` | Terminal leeren |
-| `cp` <file> <new name/path> | Datei kopieren |
+| `cp <file> <new name/path>` | Datei kopieren |
 | `ip a` | Netzwerkverbindungen anzeigen |
 | `ls` | Inhalte des aktuellen Arbeitsverzeichnisses auflisten |
 | `ls -l` | `-l`-Flag listet Berechtigungen mit auf |
 | `mkdir <name>` | Verzeichnis erstellen |
-| `mv` <file> <new name/path> | Datei verschieben |
-| `nano <program>` | `nano`-Editor zum Bearbeiten einer Datei öffnen (`Strg+O` zum Speichern, `Strg+X` zum verlassen) |
+| `mv <file> <new name/path>` | Datei verschieben |
+| `nano <program>` | `nano`-Editor zum Bearbeiten einer Datei öffnen (`Strg+O` zum Speichern, `Strg+X` zum Verlassen) |
 | `ping <ip address>` | Antwortzeit eines Gerätes im Netzwerk ausgeben (wenn erreichbar) |
 | `rm <file>` | Datei löschen |
 | `rm -rf <folder>` | Ordner löschen |
 | `sudo apt install <package>` | Package installieren |
 
-`Strg+C` terminiert Programme, die vom Terminal aus gestartet wurden.
-
-`sudo` (*superuser do*) wird genutzt um Befehle mit Administratorrechten auszuführen.
-
-`*` in Dateinamen stehen stellvertretend für beliebigen Text. `*.mp4` beispielsweise meint alle MP4-Dateien im aktuellen Abeitsverzeichnis.
-
-Viele Befehle verfügen über die `help`-Option (Flag `-h`), die eine Erklärung des Befehls und der verfügbaren Optionen ausgeben.
+- `Strg+C` terminiert Programme, die vom Terminal aus gestartet wurden.
+- `sudo` (*superuser do*) wird genutzt um Befehle mit Administratorrechten auszuführen.
+- `*` in Dateinamen stehen stellvertretend für beliebigen Text. `*.mp4` beispielsweise meint alle MP4-Dateien im aktuellen Abeitsverzeichnis.
+- Viele Befehle verfügen über die `help`-Option (Flag `-h`), die eine Erklärung des Befehls und der verfügbaren Optionen ausgeben.
