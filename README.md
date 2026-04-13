@@ -30,18 +30,18 @@ Das Projekt wurde für die folgende Hardware entwickelt und mit dieser getestet.
 - Raspberry Pi 5, 16 GB RAM
   - Betriebssystem: Raspberry Pi OS (64-bit), veröffentlicht 04.12.2025
 - Raspberry Pi Global Shutter Kamera
-- 35mm Teleobjektiv, C-Mount (BerryBase CLENS-35TEL)
+- 35&nbsp;mm Teleobjektiv, C-Mount (BerryBase CLENS-35TEL)
 - Adafruit NeoPixel Ring - 24 x 5050 RGB LED mit integrierten Treibern (Durchmesser: 52,3&nbsp;mm innen / 65,5&nbsp;mm außen)
 - Gehäuse mit Lüfter für Raspberry Pi 5
 
 Auf einem anderen Raspberry Pi-Modell kann beispielsweise die Adressierung der verwendeten Schnittstellen abweichen. Bei Nutzung einer anderen Kamera ist die Sensorauflösung zu beachten.
 
 ### Verbindung der Hardware
-Das **Objektiv** wird an das **Kameramodul** geschraubt, das Kameramodul beispielsweise auf einem **Stativ** befestigt. Gemäß der [offiziellen Dokumentation](https://www.raspberrypi.com/documentation/accessories/camera.html#install-a-raspberry-pi-camera) wird die Kamera über ein Flachbandkabel mit `CAM/DISP 0` auf dem Raspberry Pi verbunden.
+Das **Objektiv** wird an das **Kameramodul** geschraubt, das Kameramodul beispielsweise auf einem **Stativ** befestigt. Gemäß der [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/accessories/camera.html#install-a-raspberry-pi-camera) wird die Kamera über ein Flachbandkabel mit `CAM/DISP 0` auf dem Raspberry Pi verbunden.
 
-Die **Halterung** im Ordner `stl` kann mit einem 3D-Drucker gefertigt und dazu genutzt werden, den LED-Ring am Objektiv zu befestigen.
+Die **Halterung** im Ordner `stl/` kann mit einem 3D-Drucker gefertigt und dazu genutzt werden, den LED-Ring am Objektiv zu befestigen.
 
-Abhängig davon, welche Schnittstellen zur verwendet werden sollen, sind entsprechende Verbindungen herzustellen. Erklärungen zu den Schnittstellen finden sich unter [Ausgabe und Schnittstellen](#ausgabe-und-schnittstellen).
+Abhängig davon, welche Schnittstellen verwendet werden sollen, sind entsprechende Verbindungen herzustellen. Erklärungen zu den Schnittstellen finden sich unter [Ausgabe und Schnittstellen](#ausgabe-und-schnittstellen).
 
 Um kabelgebundenes **Ethernet** als Schnittstelle zur Datenübertragung zu nutzen, kann ein Gerät über ein direktes Kabel mit der RJ45-Buchse des Raspberry Pis verbunden werden.
 
@@ -58,7 +58,7 @@ Stromversorgung und Steuerung des LED-Rings funktionieren über die GPIO-Anschlu
 > [!WARNING]
 > Die Leistung, die der Raspbery Pi über die GPIO-Anschlussleiste bereitstellen kann, ist begrenzt. Den Ring rot, grün oder blau bei maximaler Helligkeit zu betreiben funktioniert zuverlässig. Vor der Nutzung von Einstellungen mit höherer Leistung (z.B. helles Weiß) ist zu prüfen, ob ausreichend Leistung bereitgestellt werden kann.
 
-Um **UART** (*Universal Asynchronous Receiver Transmitter*) als serielle Schnittstelle zur Datenübertragung zu nutzen ist ein gemeinsames Nullniveau herzustellen (z.B. an `Pin 6 (Ground)`). Zum Senden (*Transmit*) dient `GPIO 14 (UART0 TX)`, zum Empfangen (*Receive*) `GPIO 15 (UART0 RX)`.
+Um **UART** (*Universal Asynchronous Receiver Transmitter*) als serielle Schnittstelle zur Datenübertragung zu nutzen, ist ein gemeinsames Nullniveau herzustellen (z.B. an `Pin 6 (Ground)`). Zum Senden (*Transmit*) dient `GPIO 14 (UART0 TX)`, zum Empfangen (*Receive*) `GPIO 15 (UART0 RX)`.
 
 > [!WARNING]
 > Der Raspberry Pi nutzt TTL-Pegel mit 0&nbsp;V als `LOW` und +3,3&nbsp;V als `HIGH`. Den Raspberry Pi an eine Schnittstelle anzuschließen, die andere Spannungspegel nutzt, kann zu Schäden führen.
@@ -73,29 +73,29 @@ Der Raspberry Pi verfügt über zwei Hardware-**PWM**-Kanäle (*Pulsweitenmodula
 
 ## Erklärung von rpicam-reflector-tracking
 Im Zentrum von rpicam-reflector-tracking steht die Gewinnung von Lageinformationen mithilfe der an den Raspberry Pi angeschlossenen Kamera. Außerdem werden verschiedene Schnittstellen zur Verfügung gestellt, um die gewonnenen Informationen zu übertragen.
-### Marker-Tracking in der rpicam-apps pipeline
-Raspberry Pi stellt mit `rpicam-apps` einige Applikationen zur Verwendung vom Kameras zur Verfügung (siehe [Dokumentation](https://www.raspberrypi.com/documentation/accessories/camera.html#install-a-raspberry-pi-camera)).
+### Marker Tracking in der rpicam-apps pipeline
+Raspberry Pi stellt mit `rpicam-apps` einige Applikationen zur Verwendung vom Kameras zur Verfügung (siehe [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/accessories/camera.html#install-a-raspberry-pi-camera)).
 
 In diesem Projekt werden konkret die folgenden Apps verwendet.
 
 - `rpicam-hello`: zeigt ein Vorschaufenster an
 - `rpicam-vid`: nimmt ein Video auf
 
-Für die Apps stehen verschiedene **Optionen** zur Verfügung ([Übersicht](https://www.raspberrypi.com/documentation/computers/camera_software.html#rpicam-apps-options-reference)), die verwendeten sind hier aufgelistet.
+Für die Apps stehen verschiedene **Optionen** zur Verfügung, die verwendeten sind hier aufgelistet. Ein vollständige Übersicht bietet die [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/computers/camera_software.html#rpicam-apps-options-reference).
 
-| Option | Flag | Beschreibung |
+| Option | Flag | Angabe |
 | --- | --- | --- |
-| timeout | -t   | Gib die Laufzeit an, nach der sich die App schließt (0 für unbegrenzt) |
-| config | -c    | Gib eine Datei mit Konfigurationsdaten an |
-| output | -o    | Gib den Dateinamen an (nicht für `rpicam-hello`) |
-| post-process-libs | --post-process-libs | Gib den Speicherort der zu nutzenden Postprocessing-Stufen an |
-| post-process-file | --post-process-file | Gib eine JSON-Datei an, die das Postprocessing konfiguriert |
-| width | --width | Breite (Pixel) des Ausgangs (effektlos für `rpicam-hello`) |
-| height | --height | Höhe (Pixel) des Ausgangs (effektlos für `rpicam-hello`) |
-| viewfinder-width | --viefinder-width | Breite (Pixel) der Vorschau |
-| viewfinder-height | --viewfinder-height | Höhe (Pixel) der Vorschau |
-| framerate | --framerate | Bildrate |
-| shutter | --shutter | Belichtungszeit in Mikrosekunden |
+| timeout | `-t`   | Laufzeit, nach der sich die App schließt (0 für unbegrenzt) |
+| config | `-c`    | Datei mit Konfigurationsdaten |
+| output | `-o`    | Name der erzeugten Datei (nicht für `rpicam-hello`) |
+| post-process-libs | `--post-process-libs` | Speicherort der zu nutzenden Postprocessing-Stufen |
+| post-process-file | `--post-process-file` | JSON-Datei, die das Postprocessing konfiguriert |
+| width | `--width` | Breite (Pixel) des Ausgangs (effektlos für `rpicam-hello`) |
+| height | `--height` | Höhe (Pixel) des Ausgangs (effektlos für `rpicam-hello`) |
+| viewfinder-width | `--viefinder-width` | Breite (Pixel) der Vorschau |
+| viewfinder-height | `--viewfinder-height` | Höhe (Pixel) der Vorschau |
+| framerate | `--framerate` | Bildrate |
+| shutter | `--shutter` | Belichtungszeit in Mikrosekunden |
 
 Der folgende Befehl startet für 30 Sekunden ein Vorschaufenster mit einer Belichtungszeit von 100 Mikrosekunden.
 
@@ -103,7 +103,7 @@ Der folgende Befehl startet für 30 Sekunden ein Vorschaufenster mit einer Belic
 rpicam-hello -t 30s --shutter 100
 ```
 
-Die Bestimmung der Markerposition sowie deren Darstellung und Übertragung über verschiedene Schnittstellen werden in Form von Postprocessing-Stufen in die `rpicam-apps`-Pipeline implementiert. Die für dieses Projekt relevante Struktur von `rpicam-apps` und insbesondere die Rolle von Postprocessing-Stufen ist hier dargestellt.
+Die Bestimmung der Markerposition sowie deren Darstellung und Übertragung über verschiedene Schnittstellen werden in Form von **Postprocessing-Stufen** in die `rpicam-apps`-Pipeline implementiert. Die für dieses Projekt relevante Struktur von `rpicam-apps` und insbesondere die Rolle von Postprocessing-Stufen ist hier dargestellt.
 
 <div align="center">
 <picture>
@@ -111,11 +111,16 @@ Die Bestimmung der Markerposition sowie deren Darstellung und Übertragung über
 </picture>
 </div>
 
-**Postprocessing-Stufen** können der `rpicam-apps`-Pipeline hinzugefügt werden, um Stufe nach Stufe die Bildmatrix und die Metadaten jedes Frames analysieren und modifizieren zu können ([Dokumentation post-processing](https://www.raspberrypi.com/documentation/computers/camera_software.html#post-processing-with-rpicam-apps)). Die zu verwendenden Postprocessing-Stufen werden un einer JSON-Datei angegeben, welche mithilfe der Option `post-process-file` an die entsprechende Applikation übergeben wird. Die Größe der an die Postprocessing-Stufen übergebenen Frames hängt von der Ausgabegröße für das Vorschaufenster beziehungsweise die Datei ab, die mit den oben aufgeführten Optionen konfiguriert werden können. Zusätzlich zu den in `rpicam-apps` enthaltenen Postprocesing-Stufen können gemäß [Dokumentation](https://www.raspberrypi.com/documentation/computers/camera_software.html#write-your-own-post-processing-stages) weitere Stufen in *C++* geschrieben und zur Pipeline hinzugefügt werden. Dazu wird der entsprechenden Applikation mithilfe der Option `post-process-libs` der Speicherort der kompilierten zusätzlichen Postprocessing-Stufen übergeben.
+**Postprocessing-Stufen** können der `rpicam-apps`-Pipeline hinzugefügt werden, um Stufe nach Stufe die Bildmatrix und die Metadaten jedes Frames analysieren und modifizieren zu können ([Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/computers/camera_software.html#post-processing-with-rpicam-apps)). Die zu verwendenden Postprocessing-Stufen werden in einer JSON-Datei angegeben, welche mithilfe der Option post-process-file an die entsprechende Applikation übergeben wird.
+
+> [!IMPORTANT]
+> Die Auflösung der an die Postprocessing-Stufen übergebenen Frames hängt von der Ausgabegröße für das Vorschaufenster beziehungsweise die Datei ab, die mit den oben aufgeführten Optionen konfiguriert werden können.
+
+Zusätzlich zu den in `rpicam-apps` enthaltenen Postprocesing-Stufen können gemäß [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/computers/camera_software.html#write-your-own-post-processing-stages) **weitere Stufen** in *C++* geschrieben und zur Pipeline hinzugefügt werden. Dazu wird der entsprechenden Applikation mithilfe der Option post-process-libs der Speicherort der kompilierten zusätzlichen Postprocessing-Stufen übergeben.
 
 Die `.cpp`-Dateien der zusätzlichen Postprocessing-Stufen dieses Projektes befinden sich im Ordner `new_post_processing_stages`.
 
-Von diesen neuen Stufen ist `"marker_tracking_cv"` dafür zuständig, aus jedem Frame die Position des retroreflektiven Markers zu bestimmen. Dazu werden in einem ersten Schritt alle Pixel, deren Helligkeit unter einem Schwellenwert liegt, in der Bild-Matrix auf 0 gesetzt. Anschließend wird das helligkeitsgewichtete Zentrum der verbleibenden Pixel berechnet. Die so bestimmte Position wird in die Metadaten des Frames geschrieben, um von nachfolgenden Postprocessing-Stufen genutzt zu werden. `"marker_tracking_cv"` nutzt die Bibliothek [OpenCV](https://docs.opencv.org/4.x/d1/dfb/intro.html).
+Von diesen neuen Stufen ist `"marker_tracking_cv"` dafür zuständig, aus jedem Frame die Position des retroreflektiven Markers zu bestimmen. Dazu werden in einem ersten Schritt alle Pixel, deren Helligkeit unter einem **Schwellenwert** liegt, in der Bild-Matrix auf 0 gesetzt. Anschließend wird das **helligkeitsgewichtete Zentrum** der verbleibenden Pixel berechnet. Die so bestimmte Position wird in die **Metadaten** des Frames geschrieben, um von nachfolgenden Postprocessing-Stufen genutzt zu werden. `"marker_tracking_cv"` nutzt die Bibliothek [OpenCV](https://docs.opencv.org/4.x/d1/dfb/intro.html).
 
 ### Ausgabe und Schnittstellen
 
@@ -149,7 +154,7 @@ Die von den Postprocessing-Stufen `"position_ethernet"`, `"position_cout"` und `
 
 ### Projektstruktur
 
-Nachdem [rpicam-reflector-tracking einrichten](#rpicam-reflector-tracking-einrichten) befolgt wurde, liegt auf dem Raspberry Pi die folgende Ornderstruktur vor.
+Nachdem [rpicam-reflector-tracking einrichten](#rpicam-reflector-tracking-einrichten) befolgt wurde, liegt auf dem Raspberry Pi die folgende Ordnerstruktur vor.
 
 ```text
 rpicam-reflector-tracking/
@@ -171,9 +176,9 @@ rpicam-reflector-tracking/
 
 `programs` enthält *Shell*-Skripte, die mit verschiedenen Ausgabeformen jeweils die Position des retroreflektiven Markers bestimmen. Zum Teil erfüllen sie weitere Funktionen. Die verschiedenen Programme sind unter [Eingerichteten Raspberry Pi zum Marker Tracking nutzen](#eingerichteten-raspberry-pi-zum-marker-tracking-nutzen) erklärt. Dazu wird `rpicam-hello` oder `rpicam-vid` aufgerufen und durch entsprechende [Optionen](#marker-tracking-in-der-rpicam-apps-pipeline) konfiguriert, wobei andere Dateien des Projektes referenziert werden.
 
-`rpicam-apps/build/` wird durch die Option `post-process-libs` referenziert, da sich hier die kompilierten zusätzlichen Postprocessing-Stufen befinden. Um `rpicam-apps/build/` zu erzeugen werden die Postprocessing-Stufen in `new_post_processing_stages/` mithilfe der `meson.build`-Datei kompiliert (siehe [rpicam-reflector-tracking einrichten](#rpicam-reflector-tracking-einrichten)). Alternativ könnte `rpicam-apps` gemäß der [entsprechenden Dokumentation](https://www.raspberrypi.com/documentation/computers/camera_software.html#build-libcamera-and-rpicam-apps) mit den zusätzlichen Postprocessing-Stufen neu gebaut und installiert werden, die hier gewählte Methode erlaubt aber schneller Iteration bei Anpassung der Postprocessing-Stufen.
+`rpicam-apps/build/` wird durch die Option post-process-libs referenziert, da sich hier die kompilierten zusätzlichen Postprocessing-Stufen befinden. Um `rpicam-apps/build/` zu erzeugen werden die Postprocessing-Stufen in `new_post_processing_stages/` mithilfe der `meson.build`-Datei kompiliert (siehe [rpicam-reflector-tracking einrichten](#rpicam-reflector-tracking-einrichten)). Alternativ könnte `rpicam-apps` gemäß der [entsprechenden Dokumentation](https://www.raspberrypi.com/documentation/computers/camera_software.html#build-libcamera-and-rpicam-apps) mit den zusätzlichen Postprocessing-Stufen neu gebaut und installiert werden, die hier gewählte Methode erlaubt aber schneller Iteration bei Anpassung der Postprocessing-Stufen.
 
-`configuration_camera.txt` wird der Option `config` übergeben um Videoeigenschaften der Kamera einzustellen, die für alle Programme in `programs` gleich sind. Die JSON-Dateien im Ordner `configuration_post_processing/` werden durch die Option `post-process-file` referenziert und konfigurieren, welche Postprocessing-Stufen genutzt werden.
+`configuration_camera.txt` wird der Option `config` übergeben um Videoeigenschaften der Kamera einzustellen, die für alle Programme in `programs` gleich sind. Die JSON-Dateien im Ordner `configuration_post_processing/` werden durch die Option post-process-file referenziert und konfigurieren, welche Postprocessing-Stufen genutzt werden.
 
 `set_leds` enthält *Python*-Dateien, um den LED-Ring zu steuern. Dazu wird die im Ordner enthaltene Bibliothek [Pi5Neo](https://github.com/vanshksingh/Pi5Neo/tree/main) genutzt. Die Steuerung funktioniert erfahrungsgemäß obwohl der Raspberry Pi 3,3&nbsp;V-Logk nutzt, der LED-Ring aber 5&nbsp;V-Logik. `clear_leds.py` deaktiviert die LEDs. `set_leds` setzt die alle LEDs des Rings auf eine festgelegte Farbe. Die Farbe kann mit den Flags `--r`, `--g` und `--b` (jeweils 0 bis 255) in der folgenden Form gesetzt werden.
 
@@ -181,7 +186,7 @@ rpicam-reflector-tracking/
 ./set_leds.py --r 70 -- g 30
 ```
 
-Im Ordner `stl` befindet sich ein Modell der Halterung, die zur mechanischen Verbindung des LED-Rings mit dem Objektiv genutzt wird. `README.md` und `images/` dienen dieser Dokumentation.
+Im Ordner `stl/` befindet sich ein Modell der Halterung, die zur mechanischen Verbindung des LED-Rings mit dem Objektiv genutzt wird. `README.md` und `images/` dienen dieser Dokumentation.
 
 `interfaces` enthält *C++*-Programme, mit denen die Schnittstellen Ethernet, UART und PWM getestet werden können. So können Signale gesendet und auch empfangen werden. Insbesondere können diese Programme auch genutzt werden, um einen zweiten Raspberry Pi als Empfänger der über Ethernet oder UART gesendeten Positionsdaten zu verwenden, oder um den zum Marker Tracking genutzten Raspberry Pi über Ethernet zu steuern.
 
@@ -359,7 +364,7 @@ g++ uart_recv_coor.cpp -o uart_recv_coor
 g++ uart_send_coor.cpp -o uart_send_coor
 ```
 
-<a name="modifikation-von-postprocessing-stufen">**Modifikation von Postprocessing-Stufen**</a>
+<a name="modifikation-von-postprocessing-stufen"></a>**Modifikation von Postprocessing-Stufen**
 
 Die folgende Anleitung erklärt das Vorgehen, wenn die zusätzlichen Postprocessing-Stufen verändert wurden und erneut kompiliert werden sollen.
 
@@ -499,15 +504,15 @@ Alternativ kann eine der folgenden Methoden zur [Fernsteuerung](https://www.rasp
 
 **SSH**
 
-SSH (**S**ecure **SH**ell) liefert ein Command Line Interface (**CLI**) zur Fernsteuerung des Raspberry Pis auf einem anderen Gerät. Zum Öffnen des Zugangs ist auf dem zur Steuerung genutzte Gerät ein Terminal zu öffnen (z.B. *PowerShell* auf Windows-Geräten) und ein Befehl der folgenden Form auszuführen.
+SSH (*Secure Shell*) liefert ein Command Line Interface (**CLI**) zur Fernsteuerung des Raspberry Pis auf einem anderen Gerät. Zum Öffnen des Zugangs ist auf dem zur Steuerung genutzte Gerät ein Terminal zu öffnen (z.B. *PowerShell* auf Windows-Geräten) und ein Befehl der folgenden Form auszuführen.
 
 ```bash
 ssh <username>@<hostname>.local
 ```
 
-Nach Eingabe des Passworts können Befehle auf dem Raspberry Pi ausgeführt werden. Statt `<hostname>.local` kann auch die IP-Adresse genutzt werden. *PowerShell* kann auf Windows-Geräten durch Rechtsklick in einem gewünschten Ordner direkt an dieser Stelle geöffnet werden. Mehr Informationen zu **SSH** liefert die [Raspberry Pi Dokumentation](https://www.raspberrypi.com/documentation/computers/remote-access.html#ssh).
+Nach Eingabe des Passworts können Befehle auf dem Raspberry Pi ausgeführt werden. Statt `<hostname>.local` kann auch die IP-Adresse genutzt werden. *PowerShell* kann auf Windows-Geräten durch Rechtsklick in einem gewünschten Ordner direkt an dieser Stelle geöffnet werden. Mehr Informationen zu **SSH** liefert die [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/computers/remote-access.html#ssh).
 
-Mit SCP (**S**ecure **C**opy **P**rotocol) können Dateien vom Raspberry Pi auf das zur Steuerung genutzte Gerät kopiert werden und umgekehrt ([Raspberry Pi Dokumentation](https://www.raspberrypi.com/documentation/computers/remote-access.html#scp)). Dieser Befehl kopiert eine angegebene Datei vom Raspberry Pi in das aktuelle Arbeitsverzeichnis auf einem Windows-Gerät. `..` wird dabei in relativen Dateipfaden genutzt und meint das nächste übergeordnete Verzeichnis.
+Mit SCP (*Secure Copy Protocol*) können Dateien vom Raspberry Pi auf das zur Steuerung genutzte Gerät kopiert werden und umgekehrt ([Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/computers/remote-access.html#scp)). Dieser Befehl kopiert eine angegebene Datei vom Raspberry Pi in das aktuelle Arbeitsverzeichnis auf einem Windows-Gerät. `..` wird dabei in relativen Dateipfaden genutzt und meint das nächste übergeordnete Verzeichnis.
 
 ```bash
 scp <username>@<hostname>.local:<file path> ..\
@@ -524,11 +529,11 @@ scp -r ..\<folder> <username>@<hostname>.local:<file path>
 
 **VNC**
 
-VNC (**V**irtual **N**etwork **C**omputing) teilt den gesamten Bildschirm des Raspberry Pis und somit auch die GUI. Es erfordert die Installation eines entsprechenden Programms auf das zur Steuerung genutzte Gerät und ein von beiden Geräten genutztes Netzwerk. Weitere Informationen liefert die [Raspberry Pi Dokumentation](https://www.raspberrypi.com/documentation/computers/remote-access.html#vnc).
+VNC (*Virtual Network Computing*) teilt den gesamten Bildschirm des Raspberry Pis und somit auch die GUI. Es erfordert die Installation eines entsprechenden Programms auf das zur Steuerung genutzte Gerät und ein von beiden Geräten genutztes Netzwerk. Weitere Informationen liefert die [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/computers/remote-access.html#vnc).
 
 **Raspberry Pi Connect**
 
-Mit Raspberry Pi Connect kann auf einen Raspberry Pi auch aus einem anderen Netzwerk heraus über einen Browser zugegriffen werden. Erforderlich ist hierfür ein entsprechender **Account**. Informationen finden sich in der [Raspberry Pi Dokumentation](https://www.raspberrypi.com/documentation/services/connect.html).
+Mit Raspberry Pi Connect kann auf einen Raspberry Pi auch aus einem anderen Netzwerk heraus über einen Browser zugegriffen werden. Erforderlich ist hierfür ein entsprechender **Account**. Informationen finden sich in der [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/services/connect.html).
 
 ### Wichtige Befehle
 
