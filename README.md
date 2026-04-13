@@ -56,7 +56,7 @@ Für den LED-Ring, sowie für UART und PWM als Schnittstellen zur Ausgabe der be
 Stromversorgung und Steuerung des LED-Rings funktionieren über die GPIO-Anschlussleiste. Dazu werden `5V` und `Ground` des Rings mit den entsprechenden Pins des Raspberry Pis verbunden, sowie `IN` des LED-Rings mit `GPIO 10 (SPI0 MOSI)` der GPIO-Anschlussleiste. Da das Steuersignal mithilfe von SPI erzeugt wird, werden auch `GPIO 9 (SPI0 MISO)`, `GPIO 11 (SPI0 SCLK)` und `GPIO 8 (SPI0 CE0)` verwendet.
 
 > [!WARNING]
-> Die Leistung, die der Raspbery Pi über die GPIO-Anschlussleiste bereitstellen kann, ist begrenzt. Den Ring rot, grün oder blau bei maximaler Helligkeit zu betreiben funktioniert zuverlässig. Vor der Nutzung von Einstellungen mit höherer Leistung (z.B. helles Weiß) ist zu prüfen, ob ausreichend Leistung bereitgestellt werden kann.
+> Die Leistung, die der Raspberry Pi über die GPIO-Anschlussleiste bereitstellen kann, ist begrenzt. Den Ring rot, grün oder blau bei maximaler Helligkeit zu betreiben funktioniert zuverlässig. Vor der Nutzung von Einstellungen mit höherer Leistung (z.B. helles Weiß) ist zu prüfen, ob ausreichend Leistung bereitgestellt werden kann.
 
 Um **UART** (*Universal Asynchronous Receiver Transmitter*) als serielle Schnittstelle zur Datenübertragung zu nutzen, ist ein gemeinsames Nullniveau herzustellen (z.B. an `Pin 6 (Ground)`). Zum Senden (*Transmit*) dient `GPIO 14 (UART0 TX)`, zum Empfangen (*Receive*) `GPIO 15 (UART0 RX)`.
 
@@ -73,15 +73,15 @@ Der Raspberry Pi verfügt über zwei Hardware-**PWM**-Kanäle (*Pulsweitenmodula
 
 ## Erklärung von rpicam-reflector-tracking
 Im Zentrum von rpicam-reflector-tracking steht die Gewinnung von Lageinformationen mithilfe der an den Raspberry Pi angeschlossenen Kamera. Außerdem werden verschiedene Schnittstellen zur Verfügung gestellt, um die gewonnenen Informationen zu übertragen.
-### Marker Tracking in der rpicam-apps pipeline
-Raspberry Pi stellt mit `rpicam-apps` einige Applikationen zur Verwendung vom Kameras zur Verfügung (siehe [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/accessories/camera.html#install-a-raspberry-pi-camera)).
+### Marker Tracking in der rpicam-apps Pipeline
+Raspberry Pi stellt mit `rpicam-apps` einige Applikationen zur Verwendung von Kameras zur Verfügung (siehe [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/accessories/camera.html#install-a-raspberry-pi-camera)).
 
 In diesem Projekt werden konkret die folgenden Apps verwendet.
 
 - `rpicam-hello`: zeigt ein Vorschaufenster an
 - `rpicam-vid`: nimmt ein Video auf
 
-Für die Apps stehen verschiedene **Optionen** zur Verfügung, die verwendeten Optionen sind hier aufgelistet. Ein vollständige Übersicht bietet die [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/computers/camera_software.html#rpicam-apps-options-reference).
+Für die Apps stehen verschiedene **Optionen** zur Verfügung, die verwendeten Optionen sind hier aufgelistet. Eine vollständige Übersicht bietet die [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/computers/camera_software.html#rpicam-apps-options-reference).
 
 | Option | Flag | Angabe |
 | --- | --- | --- |
@@ -118,7 +118,7 @@ Die Bestimmung der Markerposition sowie deren Darstellung und Übertragung über
 
 Zusätzlich zu den in `rpicam-apps` enthaltenen Postprocesing-Stufen können gemäß [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/computers/camera_software.html#write-your-own-post-processing-stages) **weitere Stufen** in *C++* geschrieben und zur Pipeline hinzugefügt werden. Dazu wird der entsprechenden Applikation mithilfe der Option `post-process-libs` der Speicherort der kompilierten zusätzlichen Postprocessing-Stufen übergeben.
 
-Die `.cpp`-Dateien der zusätzlichen Postprocessing-Stufen dieses Projektes befinden sich im Ordner `new_post_processing_stages`.
+Die `.cpp`-Dateien der zusätzlichen Postprocessing-Stufen dieses Projektes befinden sich im Ordner `new_post_processing_stages/`.
 
 Von diesen neuen Stufen ist `"marker_tracking_cv"` dafür zuständig, aus jedem Frame die Position des retroreflektiven Markers zu bestimmen. Dazu werden in einem ersten Schritt alle Pixel, deren Helligkeit unter einem **Schwellenwert** liegt, in der Bild-Matrix auf 0 gesetzt. Anschließend wird das **helligkeitsgewichtete Zentrum** der verbleibenden Pixel berechnet. Die so bestimmte Position wird in die **Metadaten** des Frames geschrieben, um von nachfolgenden Postprocessing-Stufen genutzt zu werden. `"marker_tracking_cv"` nutzt die Bibliothek [OpenCV](https://docs.opencv.org/4.x/d1/dfb/intro.html).
 
@@ -180,7 +180,7 @@ rpicam-reflector-tracking/
 
 `configuration_camera.txt` wird der Option `config` übergeben, um Videoeigenschaften der Kamera einzustellen, die für alle Programme in `programs/` gleich sind. Die JSON-Dateien im Ordner `configuration_post_processing/` werden durch die Option `post-process-file` referenziert. Sie konfigurieren, welche Postprocessing-Stufen genutzt werden.
 
-`set_leds/` enthält *Python*-Dateien, um den LED-Ring zu steuern. Dazu wird die im Ordner enthaltene Bibliothek [Pi5Neo](https://github.com/vanshksingh/Pi5Neo/tree/main) genutzt. Die Steuerung funktioniert erfahrungsgemäß, obwohl der Raspberry Pi 3,3&nbsp;V-Logk nutzt, der LED-Ring aber 5&nbsp;V-Logik. `clear_leds.py` deaktiviert die LEDs. `set_leds/` setzt alle LEDs des Rings auf eine festgelegte Farbe. Die Farbe kann mit den Flags `--r`, `--g` und `--b` (jeweils 0 bis 255) in der folgenden Form gesetzt werden.
+`set_leds/` enthält *Python*-Dateien, um den LED-Ring zu steuern. Dazu wird die im Ordner enthaltene Bibliothek [Pi5Neo](https://github.com/vanshksingh/Pi5Neo/tree/main) genutzt. Die Steuerung funktioniert erfahrungsgemäß, obwohl der Raspberry Pi 3,3&nbsp;V-Logik nutzt, der LED-Ring aber 5&nbsp;V-Logik. `clear_leds.py` deaktiviert die LEDs. `set_leds/` setzt alle LEDs des Rings auf eine festgelegte Farbe. Die Farbe kann mit den Flags `--r`, `--g` und `--b` (jeweils 0 bis 255) in der folgenden Form gesetzt werden.
 
 ```bash
 ./set_leds.py --r 70 -- g 30
@@ -190,7 +190,7 @@ Im Ordner `stl/` befindet sich ein Modell der Halterung, die zur mechanischen Ve
 
 `interfaces/` enthält *C++*-Programme, mit denen die Schnittstellen Ethernet, UART und PWM getestet werden können. So können Signale gesendet und auch empfangen werden. Insbesondere können diese Programme auch auf einem zweiten Raspberry Pi genutzt werden, um die über Ethernet oder UART gesendeten Positionsdaten zu empfangen zu verwenden, oder um den zum Marker Tracking genutzten Raspberry Pi über Ethernet zu steuern.
 
-**Programme in `interfaces`**
+**Programme in `interfaces/`**
 
 | Datei | Funktion | Vorgesehenes Gerät |
 | --- | --- | --- |
@@ -206,7 +206,7 @@ Im Ordner `stl/` befindet sich ein Modell der Halterung, die zur mechanischen Ve
 
 ## Raspberry Pi einrichten mit rpicam-reflector-tracking
 
-Voraussetzung für die Nutzung von rpicam-reflector-tracking ist ein ein Raspberry Pi mit dem Betriebssystem Raspberry Pi OS. Dieses kann gemäß [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/computers/getting-started.html#installing-the-operating-system) mithilfe des Raspberry Pi Imagers installiert werden. Bereits im Raspberry Pi Imager können WLAN und, abhängig von der geplanten Nutzung, [SSH](#ssh), [VNC](#vnc) und [Raspberry Pi Connect](#raspberry-pi-connect) konfiguriert werden.
+Voraussetzung für die Nutzung von rpicam-reflector-tracking ist ein Raspberry Pi mit dem Betriebssystem Raspberry Pi OS. Dieses kann gemäß [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/computers/getting-started.html#installing-the-operating-system) mithilfe des Raspberry Pi Imagers installiert werden. Bereits im Raspberry Pi Imager können WLAN und, abhängig von der geplanten Nutzung, [SSH](#ssh), [VNC](#vnc) und [Raspberry Pi Connect](#raspberry-pi-connect) konfiguriert werden.
 
 ### Raspberry Pi vorbereiten
 
@@ -233,7 +233,7 @@ sudo nmcli con add type ethernet ifname eth0 con-name eth0-static ip4 192.168.1.
 sudo nmcli con up eth0-static
 ```
 
-Ob die Adresse korrekt gesetzt wurde kann mit diesem Befehl geprüft werden.
+Ob die Adresse korrekt gesetzt wurde, kann mit diesem Befehl geprüft werden.
 
 ```bash
 ip a
@@ -254,7 +254,7 @@ sudo nmcli con up eth0-static
 
 **PWM**
 
-Um die Harware-PWM-Kanäle des Raspberry Pis nutzen zu können, sind die folgenden Schritte zu befolgen.
+Um die Hardware-PWM-Kanäle des Raspberry Pis nutzen zu können, sind die folgenden Schritte zu befolgen.
 
 1. Konfigurationsdatei zur Bearbeitung öffnen.
 
@@ -284,7 +284,19 @@ ls /sys/class/pwm
 
 ### rpicam-reflector-tracking einrichten
 
-Um rpicam-reflector-tracking einzurichten, muss zunächst der **Projektordner** aus diesem Repository nach `~` des Raspberry Pis **kopiert** werden. Falls der Projektordner an anderer Stelle gespeichert wird, muss in den aufgeführten Befehlen der Dateipfad angepasst werden. Nachdem die folgenden Schritte durchgeführt wurden, kann der Raspberry Pi zum Marker Tracking eingesetzt werden.
+Nachdem die folgenden Schritte durchgeführt wurden, kann der Raspberry Pi zum Marker Tracking eingesetzt werden.
+
+In das `home`-Verzeichnis des Raspberry Pis wechseln.
+
+```bash
+cd ~
+```
+
+Projektordner aus diesem Repository nach `~` des Raspberry Pis kopieren. Falls der Projektordner an anderer Stelle gespeichert wird, muss in den aufgeführten Befehlen der Dateipfad angepasst werden.
+
+```bash
+git clone https://github.com/ZiegenbalgSimon/rpicam-reflector-tracking.git
+```
 
 In den Projektordner wechseln.
 
@@ -398,7 +410,7 @@ meson compile -C build
 
 Nach der [Einrichtung von rpicam-reflector-tracking](#rpicam-reflector-tracking-einrichten) können retroreflektive Marker getrackt werden, wie nachfolgend beschrieben.
 
-### Konfiguratonsdateien von rpicam-reflector-tracking
+### Konfigurationsdateien von rpicam-reflector-tracking
 
 Die JSON-Dateien im Ordner `configuration/configuration_post_processing/` konfigurieren, welche Postprocessing-Stufen genutzt werden. Hier ist `configuration_ethernet.json` gezeigt.
 
@@ -447,7 +459,7 @@ cd ~/rpicam-reflector-tracking/programs
 ./tracking_ethernet_remote.sh
 ```
 
-In der folgenden Auflistung ist angegeben, welche Postprocessing-Stufen und welche Applikation die Programme jeweils nutzen. Mit der Erklärung der [Konfiguratonsdateien von rpicam-reflector-tracking](#konfiguratonsdateien-von-rpicam-reflector-tracking) erschließen sich daraus die Eigenschaften der Programme.
+In der folgenden Auflistung ist angegeben, welche Postprocessing-Stufen und welche Applikation die Programme jeweils nutzen. Mit der Erklärung der [Konfigurationsdateien von rpicam-reflector-tracking](#konfigurationsdateien-von-rpicam-reflector-tracking) erschließen sich daraus die Eigenschaften der Programme.
 
 | Program | Applikation | JSON-Datei |
 | --- | --- | --- |
@@ -472,15 +484,15 @@ Die Postprocessing-Stufe `"marker_tracking_cv"` nutzt eine Schwellenwertentfernu
 Shortis, M.R., Clarke, T.A., Short, T. 1994., A comparison of some techniques for the subpixel location of discrete target images, Videometrics III. SPIE Vol. 2350. Boston. pp. 239-250.
 ```
 
-Um die Markererkennung robuster zu gestalten, könnte `"marker_tracking_cv"` erweitert werden. Nach (Shortis, M.R. et al., 1994) könnten dazu Ausreißerpixel entfernt werden, deren Helligkeit oberhalb des Schwellenwertes liegt, ohne in einer Ansammlung heller Pixel zu liegen (*blob testing*). Außerdem könnte die Geometrie der als Marker identifizierten Pixelansammlung geprüft werden (Shortis, M.R. et al., 1994). Zudem bietet [OpenCV](https://docs.opencv.org/4.x/d1/dfb/intro.html) Funktionen mit denen es mögliche wäre, Verzerrungen des Objektives zu korrigieren.
+Um die Markererkennung robuster zu gestalten, könnte `"marker_tracking_cv"` erweitert werden. Nach (Shortis, M.R. et al., 1994) könnten dazu Ausreißerpixel entfernt werden, deren Helligkeit oberhalb des Schwellenwertes liegt, ohne in einer Ansammlung heller Pixel zu liegen (*blob testing*). Außerdem könnte die Geometrie der als Marker identifizierten Pixelansammlung geprüft werden (Shortis, M.R. et al., 1994). Zudem bietet [OpenCV](https://docs.opencv.org/4.x/d1/dfb/intro.html) Funktionen, mit denen es mögliche wäre, Verzerrungen des Objektives zu korrigieren.
 
 **Tracking einer Form statt eines Punktes**
 
-Um statt der Position eines Markermitelpunktes die Form eines Objektes zu beobachten, müsste eine entsprechende neue Postprocessing-Stufe programmiert und im Ordner `new_post_processing_stages/` abgelegt werden. Diese Stufe könnte beispielsweise Koeffizienten der polynomialen Mittellinie einer Form in die Metadaten des Frames schreiben. Die Übertragung dieser Information könnte äquivalent zur Übertragung in diese Projekt als zusätzliche Postprocessing-Stufe implementiert werden. Die Postprocessing-Stufen müssten [neu kompiliert werden](#modifikation-von-postprocessing-stufen). Außerdem wären eine entsprechende Konfigurationsdatei und eine *Shell*-Datei im `programs`-Ordner vorzusehen.
+Um statt der Position eines Markermitelpunktes die Form eines Objektes zu beobachten, müsste eine entsprechende neue Postprocessing-Stufe programmiert und im Ordner `new_post_processing_stages/` abgelegt werden. Diese Stufe könnte beispielsweise Koeffizienten der polynomialen Mittellinie einer Form in die Metadaten des Frames schreiben. Die Übertragung dieser Information könnte äquivalent zur Übertragung in diesem Projekt als zusätzliche Postprocessing-Stufe implementiert werden. Die Postprocessing-Stufen müssten [neu kompiliert werden](#modifikation-von-postprocessing-stufen). Außerdem wären eine entsprechende Konfigurationsdatei und eine *Shell*-Datei im `programs`-Ordner vorzusehen.
 
 **Nutzung einer zweiten Kamera**
 
-Um dreidimensionals Tracking zu ermöglichen, könnte eine zweite Kamera hizugefügt werden. Denkbar sind sowohl ein Stereo-Setup mit parallel ausgerichteten Kameras, als auch zwei rechtwinklig zueinander ausgerichtete Kameras. Raspberry Pi Global Shutter Kameras können auf zwei verschiedenen Wegen synchronisiert werden:
+Um dreidimensionales Tracking zu ermöglichen, könnte eine zweite Kamera hinzugefügt werden. Denkbar sind sowohl ein Stereo-Setup mit parallel ausgerichteten Kameras als auch zwei rechtwinklig zueinander ausgerichtete Kameras. Raspberry Pi Global Shutter Kameras können auf zwei verschiedenen Wegen synchronisiert werden:
 
 - [Synchronisation mittels externem Trigger](https://www.raspberrypi.com/documentation/accessories/camera.html#external-trigger)
 - [Software-Kamerasynchronisation](https://www.raspberrypi.com/documentation/computers/camera_software.html#software-camera-synchronisation)
@@ -491,7 +503,7 @@ Die aus den beiden Kamera-Streams gewonnenen Informationen können entweder auf 
 
 Dieser Abschnitt soll Personen ohne Vorerfahrung den Einstieg in die Arbeit mit Raspberry Pi erleichtern.
 
-Raspberry Pi OS ist eine **Linux**-Distribution mit grafischer Benutzeroberfläche (GUI). Diese Dokumentation beschreibt eine *textbasierte* Bedienung über das **Terminal**. Zum Lernen von Linux bezehungsweise der Arbeit mit Command Line Interfaces (CLI) sind online viele Ressourcen verfügbar.
+Raspberry Pi OS ist eine **Linux**-Distribution mit grafischer Benutzeroberfläche (GUI). Diese Dokumentation beschreibt eine *textbasierte* Bedienung über das **Terminal**. Zum Lernen von Linux beziehungsweise der Arbeit mit Command Line Interfaces (CLI) sind online viele Ressourcen verfügbar.
 
 ### Möglichkeiten zur Steuerung des Raspberry Pis
 
@@ -499,7 +511,7 @@ Raspberry Pi OS ist eine **Linux**-Distribution mit grafischer Benutzeroberfläc
 
 Über die (micro) HDMI-Buchse kann ein Bildschirm an den Raspberry Pi angeschlossen werden. Über eine angeschlossene Maus und Tastatur kann der Raspberry Pi direkt gesteuert werden.
 
-Alternativ kann eine der folgenden Methoden zur [Fernsteuerung](https://www.raspberrypi.com/documentation/computers/remote-access.html) genutzt werden.
+Alternativ kann eine der folgenden Methoden zur Fernsteuerung genutzt werden.
 
 > [!TIP]
 > SSH und VNC erfordern, dass sich der Raspberry Pi und das zur Steuerung genutzte Gerät im gleichen WLAN befinden. Als gemeinsames WLAN kann auch ein mobiler Hotspot genutzt werden.
@@ -525,7 +537,7 @@ scp <username>@<hostname>.local:<file path> ..\
 > [!IMPORTANT]
 > Auf Linux-Geräten wird `/` für Dateipfade genutzt, auf Windows-Geräten `\`.
 
-Gleichermaßen kann von einem Windos-Gerät auf den Raspberry Pi kopiert werden. Hier wird beispielhaft die Flag `-r` (*rekursiv*) genutzt, um einen ganzen Ordner zu kopieren.
+Gleichermaßen kann von einem Windows-Gerät auf den Raspberry Pi kopiert werden. Hier wird beispielhaft die Flag `-r` (*rekursiv*) genutzt, um einen ganzen Ordner zu kopieren.
 
 ```bash
 scp -r ..\<folder> <username>@<hostname>.local:<file path>
@@ -581,5 +593,5 @@ Die folgende Tabelle enthält Befehle, die für den Anwendungsfall dieses Projek
 
 - `Strg+C` terminiert Programme, die vom Terminal aus gestartet wurden.
 - `sudo` (*superuser do*) wird genutzt um Befehle mit Administratorrechten auszuführen.
-- `*` in Dateinamen stehen stellvertretend für beliebigen Text. `*.mp4` beispielsweise meint alle MP4-Dateien im aktuellen Abeitsverzeichnis.
+- `*` in Dateinamen stehen stellvertretend für beliebigen Text. `*.mp4` beispielsweise meint alle MP4-Dateien im aktuellen Arbeitsverzeichnis.
 - Viele Befehle verfügen über die `help`-Option (Flag `-h`), die eine Erklärung des Befehls und der verfügbaren Optionen ausgeben.
