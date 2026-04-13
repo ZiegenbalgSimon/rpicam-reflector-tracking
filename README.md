@@ -81,7 +81,7 @@ In diesem Projekt werden konkret die folgenden Apps verwendet.
 - `rpicam-hello`: zeigt ein Vorschaufenster an
 - `rpicam-vid`: nimmt ein Video auf
 
-Für die Apps stehen verschiedene **Optionen** zur Verfügung, die verwendeten sind hier aufgelistet. Ein vollständige Übersicht bietet die [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/computers/camera_software.html#rpicam-apps-options-reference).
+Für die Apps stehen verschiedene **Optionen** zur Verfügung, die verwendeten Optionen sind hier aufgelistet. Ein vollständige Übersicht bietet die [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/computers/camera_software.html#rpicam-apps-options-reference).
 
 | Option | Flag | Angabe |
 | --- | --- | --- |
@@ -180,7 +180,7 @@ rpicam-reflector-tracking/
 
 `configuration_camera.txt` wird der Option `config` übergeben, um Videoeigenschaften der Kamera einzustellen, die für alle Programme in `programs/` gleich sind. Die JSON-Dateien im Ordner `configuration_post_processing/` werden durch die Option `post-process-file` referenziert. Sie konfigurieren, welche Postprocessing-Stufen genutzt werden.
 
-`set_leds` enthält *Python*-Dateien, um den LED-Ring zu steuern. Dazu wird die im Ordner enthaltene Bibliothek [Pi5Neo](https://github.com/vanshksingh/Pi5Neo/tree/main) genutzt. Die Steuerung funktioniert erfahrungsgemäß, obwohl der Raspberry Pi 3,3&nbsp;V-Logk nutzt, der LED-Ring aber 5&nbsp;V-Logik. `clear_leds.py` deaktiviert die LEDs. `set_leds` setzt die alle LEDs des Rings auf eine festgelegte Farbe. Die Farbe kann mit den Flags `--r`, `--g` und `--b` (jeweils 0 bis 255) in der folgenden Form gesetzt werden.
+`set_leds/` enthält *Python*-Dateien, um den LED-Ring zu steuern. Dazu wird die im Ordner enthaltene Bibliothek [Pi5Neo](https://github.com/vanshksingh/Pi5Neo/tree/main) genutzt. Die Steuerung funktioniert erfahrungsgemäß, obwohl der Raspberry Pi 3,3&nbsp;V-Logk nutzt, der LED-Ring aber 5&nbsp;V-Logik. `clear_leds.py` deaktiviert die LEDs. `set_leds/` setzt alle LEDs des Rings auf eine festgelegte Farbe. Die Farbe kann mit den Flags `--r`, `--g` und `--b` (jeweils 0 bis 255) in der folgenden Form gesetzt werden.
 
 ```bash
 ./set_leds.py --r 70 -- g 30
@@ -188,7 +188,7 @@ rpicam-reflector-tracking/
 
 Im Ordner `stl/` befindet sich ein Modell der Halterung, die zur mechanischen Verbindung des LED-Rings mit dem Objektiv genutzt wird. `README.md` und `images/` dienen dieser Dokumentation.
 
-`interfaces` enthält *C++*-Programme, mit denen die Schnittstellen Ethernet, UART und PWM getestet werden können. So können Signale gesendet und auch empfangen werden. Insbesondere können diese Programme auch auf einem zweiten Raspberry Pi genutzt werden, um die über Ethernet oder UART gesendeten Positionsdaten zu empfangen zu verwenden, oder um den zum Marker Tracking genutzten Raspberry Pi über Ethernet zu steuern.
+`interfaces/` enthält *C++*-Programme, mit denen die Schnittstellen Ethernet, UART und PWM getestet werden können. So können Signale gesendet und auch empfangen werden. Insbesondere können diese Programme auch auf einem zweiten Raspberry Pi genutzt werden, um die über Ethernet oder UART gesendeten Positionsdaten zu empfangen zu verwenden, oder um den zum Marker Tracking genutzten Raspberry Pi über Ethernet zu steuern.
 
 **Programme in `interfaces`**
 
@@ -206,13 +206,13 @@ Im Ordner `stl/` befindet sich ein Modell der Halterung, die zur mechanischen Ve
 
 ## Raspberry Pi einrichten mit rpicam-reflector-tracking
 
-Voraussetzung für die Nutzung von rpicam-reflector-tracking ist ein ein Raspberry Pi mit dem Betriebssystem Raspberry Pi OS. Dieses kann gemäß [Raspberry Pi Dokumentation](https://www.raspberrypi.com/documentation/computers/getting-started.html#installing-the-operating-system) mithilfe des *Raspberry Pi Imagers* installiert werden. Bereits im Raspberry Pi Imager können WLAN und, abhängig von der geplanten Nutzung, [SSH](#ssh), [VNC](#vnc) und [Raspberry Pi Connect](#raspberry-pi-connect) konfiguriert werden.
+Voraussetzung für die Nutzung von rpicam-reflector-tracking ist ein ein Raspberry Pi mit dem Betriebssystem Raspberry Pi OS. Dieses kann gemäß [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/computers/getting-started.html#installing-the-operating-system) mithilfe des Raspberry Pi Imagers installiert werden. Bereits im Raspberry Pi Imager können WLAN und, abhängig von der geplanten Nutzung, [SSH](#ssh), [VNC](#vnc) und [Raspberry Pi Connect](#raspberry-pi-connect) konfiguriert werden.
 
 ### Raspberry Pi vorbereiten
 
 Raspberry Pi OS kann auf der grafischen Benutzeroberfläche (GUI) in den Einstellungen konfiguriert werden. Falls noch nicht während der Installation geschehen, kann hier eine WLAN-Verbindung eingerichtet werden.
 
-In den [Interface options](https://www.raspberrypi.com/documentation/computers/configuration.html#interfacing-options) können *SSH* und *VNC* aktiviert werden, falls sie genutzt werden sollen. Zur Steuerung des LED-Rings mithilfe con `Pi5Neo` muss hier *SPI* aktiviert werden. Zur Verwendung von UART zur Datenübertragung sollte *Serial Port* aktiviert und *Serial console* deaktiviert werden.
+In den [Interface options](https://www.raspberrypi.com/documentation/computers/configuration.html#interfacing-options) können *SSH* und *VNC* aktiviert werden, falls sie genutzt werden sollen. Zur Steuerung des LED-Rings mithilfe von `Pi5Neo` muss hier *SPI* aktiviert werden. Zur Verwendung von UART zur Datenübertragung sollte *Serial Port* aktiviert und *Serial console* deaktiviert werden.
 
 Um die zusätzlichen Postprocessing-Stufen kompilieren zu können müssen die folgenden **Abhängigkeiten und Packages** installiert werden.
 
@@ -245,10 +245,10 @@ Für den Empfänger ist im lokalen Netzwerk die IP-Adresse `192.168.1.2` zu setz
 ping 192.168.1.2
 ```
 
-Falls die IP-Adresse zu einem späteren Zeitpunkt geändert werden soll, kann der folgende Befehl genutzt werden.
+Falls die IP-Adresse zu einem späteren Zeitpunkt geändert werden soll, kann der folgende Befehl genutzt werden (IP-Adresse ergänzen).
 
 ```bash
-sudo nmcli con modify eth0-static ipv4.addresses [new_ip]/24
+sudo nmcli con modify eth0-static ipv4.addresses <new_ip>/24
 sudo nmcli con up eth0-static
 ```
 
@@ -284,7 +284,7 @@ ls /sys/class/pwm
 
 ### rpicam-reflector-tracking einrichten
 
-Um rpicam-reflector-tracking einzurichten muss zunächst der **Projektordner** aus diesem Repository nach `~` des Raspberry Pis **kopiert** werden. Falls der Projektordner an anderer Stelle gespeichert wird, muss in den aufgeführten Befehlen der Dateipfad angepasst werden. Nachdem die folgenden Schritte durchgeführt wurden, kann der Raspberry Pi zum Marker Tracking eingesetzt werden.
+Um rpicam-reflector-tracking einzurichten, muss zunächst der **Projektordner** aus diesem Repository nach `~` des Raspberry Pis **kopiert** werden. Falls der Projektordner an anderer Stelle gespeichert wird, muss in den aufgeführten Befehlen der Dateipfad angepasst werden. Nachdem die folgenden Schritte durchgeführt wurden, kann der Raspberry Pi zum Marker Tracking eingesetzt werden.
 
 In den Projektordner wechseln.
 
@@ -364,6 +364,8 @@ g++ uart_recv_coor.cpp -o uart_recv_coor
 g++ uart_send_coor.cpp -o uart_send_coor
 ```
 
+Nach Ausführung aller obigen Schritte ist die Einrichtung abgeschlossen.
+
 <a name="modifikation-von-postprocessing-stufen"></a>**Modifikation von Postprocessing-Stufen**
 
 Die folgende Anleitung erklärt das Vorgehen, wenn die zusätzlichen Postprocessing-Stufen verändert wurden und erneut kompiliert werden sollen.
@@ -380,7 +382,7 @@ cd ~/rpicam-reflector-tracking/rpicam-apps
 rm -rf build
 ```
 
-Falls zu den Postprocessing-Stufen dieses Projektes eine weitere hinzugefüngt wurde und auch kompiliert werden soll, muss die `meson.build`-Datei bearbeitet werden.
+Falls zu den Postprocessing-Stufen dieses Projektes eine weitere hinzugefügt wurde und auch kompiliert werden soll, muss die `meson.build`-Datei bearbeitet werden.
 
 Postprocessing-Stufen kompilieren.
 
