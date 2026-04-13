@@ -206,15 +206,15 @@ Im Ordner `stl/` befindet sich ein Modell der Halterung, die zur mechanischen Ve
 
 ## Raspberry Pi einrichten mit rpicam-reflector-tracking
 
-Voraussetzung für die Nutzung von rpicam-reflector-tracking ist ein ein Raspberry Pi mit dem Betriebssystem Raspberry Pi OS. Dieses kann gemäß [Dokumentation](https://www.raspberrypi.com/documentation/computers/getting-started.html#installing-the-operating-system) mithilfe des Raspberry Pi Imagers installiert werden. Bereits im Raspberry Pi Imager können WLAN und, abhängig von der geplanten Nutzung, SSH, VNC und Raspberry Pi Connect konfiguriert werden.
+Voraussetzung für die Nutzung von rpicam-reflector-tracking ist ein ein Raspberry Pi mit dem Betriebssystem Raspberry Pi OS. Dieses kann gemäß [Raspberry Pi Dokumentation](https://www.raspberrypi.com/documentation/computers/getting-started.html#installing-the-operating-system) mithilfe des *Raspberry Pi Imagers* installiert werden. Bereits im Raspberry Pi Imager können WLAN und, abhängig von der geplanten Nutzung, [SSH](#ssh), [VNC](#vnc) und [Raspberry Pi Connect](#raspberry-pi-connect) konfiguriert werden.
 
 ### Raspberry Pi vorbereiten
 
 Raspberry Pi OS kann auf der grafischen Benutzeroberfläche (GUI) in den Einstellungen konfiguriert werden. Falls noch nicht während der Installation geschehen, kann hier eine WLAN-Verbindung eingerichtet werden.
 
-In den [Interface options](https://www.raspberrypi.com/documentation/computers/configuration.html#interfacing-options) können `SSH` und `VNC` aktiviert werden, falls sie genutzt werden sollen. Zur Steuerung des LED-Rings mithilfe con `Pi5Neo` muss hier `SPI` aktiviert werden. Zur Verwendung von UART zur Datenübertragung sollte `Serial Port` aktiviert und `Serial console` deaktiviert werden.
+In den [Interface options](https://www.raspberrypi.com/documentation/computers/configuration.html#interfacing-options) können *SSH* und *VNC* aktiviert werden, falls sie genutzt werden sollen. Zur Steuerung des LED-Rings mithilfe con `Pi5Neo` muss hier *SPI* aktiviert werden. Zur Verwendung von UART zur Datenübertragung sollte *Serial Port* aktiviert und *Serial console* deaktiviert werden.
 
-Um die zusätzlichen Postprocessing-Stufen kompilieren zu können müssen die folgenden Abhängigkeiten und Packages installiert werden.
+Um die zusätzlichen Postprocessing-Stufen kompilieren zu können müssen die folgenden **Abhängigkeiten und Packages** installiert werden.
 
 ```bash
 sudo apt install -y libcamera-dev libepoxy-dev libjpeg-dev libtiff5-dev libpng-dev libopencv-dev
@@ -502,7 +502,7 @@ Alternativ kann eine der folgenden Methoden zur [Fernsteuerung](https://www.rasp
 > [!TIP]
 > Als gemeinsames WLAN kann auch ein mobiler Hotspot genutzt werden.
 
-**SSH**
+<a name="ssh"></a>**SSH**
 
 SSH (*Secure Shell*) liefert ein Command Line Interface (**CLI**) zur Fernsteuerung des Raspberry Pis auf einem anderen Gerät. Zum Öffnen des Zugangs ist auf dem zur Steuerung genutzte Gerät ein Terminal zu öffnen (z.B. *PowerShell* auf Windows-Geräten) und ein Befehl der folgenden Form auszuführen.
 
@@ -527,11 +527,11 @@ Gleichermaßen kann von einem Windos-Gerät auf den Raspberry Pi kopiert werden.
 scp -r ..\<folder> <username>@<hostname>.local:<file path>
 ```
 
-**VNC**
+<a name="vnc"></a>**VNC**
 
 VNC (*Virtual Network Computing*) teilt den gesamten Bildschirm des Raspberry Pis und somit auch die GUI. Es erfordert die Installation eines entsprechenden Programms auf das zur Steuerung genutzte Gerät und ein von beiden Geräten genutztes Netzwerk. Weitere Informationen liefert die [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/computers/remote-access.html#vnc).
 
-**Raspberry Pi Connect**
+<a name="raspberry-pi-connect"></a>**Raspberry Pi Connect**
 
 Mit Raspberry Pi Connect kann auf einen Raspberry Pi auch aus einem anderen Netzwerk heraus über einen Browser zugegriffen werden. Erforderlich ist hierfür ein entsprechender **Account**. Informationen finden sich in der [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/services/connect.html).
 
