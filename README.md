@@ -85,17 +85,17 @@ Für die Apps stehen verschiedene **Optionen** zur Verfügung, die verwendeten s
 
 | Option | Flag | Angabe |
 | --- | --- | --- |
-| timeout | `-t`   | Laufzeit, nach der sich die App schließt (0 für unbegrenzt) |
-| config | `-c`    | Datei mit Konfigurationsdaten |
-| output | `-o`    | Name der erzeugten Datei (nicht für `rpicam-hello`) |
-| post-process-libs | `--post-process-libs` | Speicherort der zu nutzenden Postprocessing-Stufen |
-| post-process-file | `--post-process-file` | JSON-Datei, die das Postprocessing konfiguriert |
-| width | `--width` | Breite (Pixel) des Ausgangs (effektlos für `rpicam-hello`) |
-| height | `--height` | Höhe (Pixel) des Ausgangs (effektlos für `rpicam-hello`) |
-| viewfinder-width | `--viefinder-width` | Breite (Pixel) der Vorschau |
-| viewfinder-height | `--viewfinder-height` | Höhe (Pixel) der Vorschau |
-| framerate | `--framerate` | Bildrate |
-| shutter | `--shutter` | Belichtungszeit in Mikrosekunden |
+| `timeout` | `-t`   | Laufzeit, nach der sich die App schließt (0 für unbegrenzt) |
+| `config` | `-c`    | Datei mit Konfigurationsdaten |
+| `output` | `-o`    | Name der erzeugten Datei (nicht für `rpicam-hello`) |
+| `post-process-libs` | `--post-process-libs` | Speicherort der zu nutzenden Postprocessing-Stufen |
+| `post-process-file` | `--post-process-file` | JSON-Datei, die das Postprocessing konfiguriert |
+| `width` | `--width` | Breite (Pixel) des Ausgangs (effektlos für `rpicam-hello`) |
+| `height` | `--height` | Höhe (Pixel) des Ausgangs (effektlos für `rpicam-hello`) |
+| `viewfinder-width` | `--viefinder-width` | Breite (Pixel) der Vorschau |
+| `viewfinder-height` | `--viewfinder-height` | Höhe (Pixel) der Vorschau |
+| `framerate` | `--framerate` | Bildrate |
+| `shutter` | `--shutter` | Belichtungszeit in Mikrosekunden |
 
 Der folgende Befehl startet für 30 Sekunden ein Vorschaufenster mit einer Belichtungszeit von 100 Mikrosekunden.
 
@@ -111,12 +111,12 @@ Die Bestimmung der Markerposition sowie deren Darstellung und Übertragung über
 </picture>
 </div>
 
-**Postprocessing-Stufen** können der `rpicam-apps`-Pipeline hinzugefügt werden, um Stufe nach Stufe die Bildmatrix und die Metadaten jedes Frames analysieren und modifizieren zu können ([Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/computers/camera_software.html#post-processing-with-rpicam-apps)). Die zu verwendenden Postprocessing-Stufen werden in einer JSON-Datei angegeben, welche mithilfe der Option post-process-file an die entsprechende Applikation übergeben wird.
+**Postprocessing-Stufen** können der `rpicam-apps`-Pipeline hinzugefügt werden, um Stufe nach Stufe die Bildmatrix und die Metadaten jedes Frames analysieren und modifizieren zu können ([Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/computers/camera_software.html#post-processing-with-rpicam-apps)). Die zu verwendenden Postprocessing-Stufen werden in einer JSON-Datei angegeben, welche mithilfe der Option `post-process-file` an die entsprechende Applikation übergeben wird.
 
 > [!IMPORTANT]
 > Die Auflösung der an die Postprocessing-Stufen übergebenen Frames hängt von der Ausgabegröße für das Vorschaufenster beziehungsweise die Datei ab, die mit den oben aufgeführten Optionen konfiguriert werden können.
 
-Zusätzlich zu den in `rpicam-apps` enthaltenen Postprocesing-Stufen können gemäß [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/computers/camera_software.html#write-your-own-post-processing-stages) **weitere Stufen** in *C++* geschrieben und zur Pipeline hinzugefügt werden. Dazu wird der entsprechenden Applikation mithilfe der Option post-process-libs der Speicherort der kompilierten zusätzlichen Postprocessing-Stufen übergeben.
+Zusätzlich zu den in `rpicam-apps` enthaltenen Postprocesing-Stufen können gemäß [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/computers/camera_software.html#write-your-own-post-processing-stages) **weitere Stufen** in *C++* geschrieben und zur Pipeline hinzugefügt werden. Dazu wird der entsprechenden Applikation mithilfe der Option `post-process-libs` der Speicherort der kompilierten zusätzlichen Postprocessing-Stufen übergeben.
 
 Die `.cpp`-Dateien der zusätzlichen Postprocessing-Stufen dieses Projektes befinden sich im Ordner `new_post_processing_stages`.
 
@@ -126,9 +126,9 @@ Von diesen neuen Stufen ist `"marker_tracking_cv"` dafür zuständig, aus jedem 
 
 Das Projekt `rpicam-reflector-tracking` enthält Postprocessing-Stufen, mit denen die durch `"marker_tracking_cv"` bestimmte Markerposition visualisiert und über verschiedene Schnittstellen übertragen werden kann.
 
-`"draw_centroid_cv"` liest die von `"marker_tracking_cv"` bestimmte Position aus den Metadaten des Frames aus und zeichnet an der entsprechenden Stelle der Bild-Matrix eine Markierung ein, die im Vorschaufenster beziehungsweise in der Datei zu sehen ist. `"marker_tracking_cv"` nutzt die Bibliothek [OpenCV](https://docs.opencv.org/4.x/d1/dfb/intro.html).
+`"draw_centroid_cv"` liest die von `"marker_tracking_cv"` bestimmte Position aus den Metadaten des Frames aus und zeichnet an der entsprechenden Stelle der Bild-Matrix eine Markierung ein, die im Vorschaufenster beziehungsweise in der Datei zu sehen ist. `"draw_centroid_cv"` nutzt die Bibliothek [OpenCV](https://docs.opencv.org/4.x/d1/dfb/intro.html).
 
-`"position_ethernet"` sendet die aus den Metadaten gelesene Position des Markers per Ethernet an die IP-Adresse `192.168.1.2`.Außerdem prüft `"position_ethernet"`, ob per Ethernet Daten empfangen wurden. Wenn die `STOP`-Flag `0xFF` empfangen wurde, beendet `"position_ethernet"` die laufende Kameraapplikation, zum Beispiel `rpicam-hello`.
+`"position_ethernet"` sendet die aus den Metadaten gelesene Position des Markers per Ethernet an die IP-Adresse `192.168.1.2`. Außerdem prüft `"position_ethernet"`, ob per Ethernet Daten empfangen wurden. Wenn die `STOP`-Flag `0xFF` empfangen wurde, beendet `"position_ethernet"` die laufende Kameraapplikation, zum Beispiel `rpicam-hello`.
 
 > [!IMPORTANT]
 > Dem Empfänger in dem lokalen Netzwerk ist die IP-Adresse `192.168.1.2` zuzuordnen, um Daten per Ethernet empfangen zu können.
@@ -137,7 +137,7 @@ Das Projekt `rpicam-reflector-tracking` enthält Postprocessing-Stufen, mit dene
 
 `"position_uart"` sendet die Markerposition aus den Metadaten über eine serielle UART-Schnittstelle mit einer Baudrate von 115200. Teil der Übertragung ist ein Synchronisationsbyte `0xAA`, die genaue Struktur der Datenübertragung ist in dem entsprechenden Code dokumentiert.
 
-Die von den Postprocessing-Stufen `"position_ethernet"`, `"position_cout"` und `"position_uart"` ausgegebene Position hat das Format `(FLOOR(x * 10), FLOOR(y * 10))`, wobei x und y die Position des Markers in Pixeln abbilden. So können Ganzzahlen verwendet und trotzdem, für höhere Auflösung, die erste Nachkommastelle der Pixelposition erhalten werden.
+Die von den Postprocessing-Stufen `"position_ethernet"`, `"position_cout"` und `"position_uart"` ausgegebene Position hat das Format `(FLOOR(x * 10), FLOOR(y * 10))`, wobei `x` und `y` die Position des Markers in Pixeln abbilden. So können Ganzzahlen verwendet und trotzdem, zugunsten der Auflösung, die erste Nachkommastelle der Pixelposition erhalten werden.
 
 `"position_pwm"` setzt den Tastgrad der Hardware-PWM-Kanäle 0 und 1 des Raspberry Pis abhängig von der Pixelposition des Markers, wobei `PWM0` die horizontale Position und `PWM1` die vertikale Position repräsentiert. Der Tastgrad wird konkret auf `x / frame_width` beziehungsweise `y / frame_height` gesetzt. Durch Verwendung der mittleren Spannung innerhalb eines Zeitintervalls oder durch Pulsdauermessung kann die Positionsinformation aus dem PWM-Signal zurückgewonnen werden.
 
@@ -174,13 +174,13 @@ rpicam-reflector-tracking/
 └── README.md
 ```
 
-`programs` enthält *Shell*-Skripte, die mit verschiedenen Ausgabeformen jeweils die Position des retroreflektiven Markers bestimmen. Zum Teil erfüllen sie weitere Funktionen. Die verschiedenen Programme sind unter [Eingerichteten Raspberry Pi zum Marker Tracking nutzen](#eingerichteten-raspberry-pi-zum-marker-tracking-nutzen) erklärt. Dazu wird `rpicam-hello` oder `rpicam-vid` aufgerufen und durch entsprechende [Optionen](#marker-tracking-in-der-rpicam-apps-pipeline) konfiguriert, wobei andere Dateien des Projektes referenziert werden.
+`programs/` enthält *Shell*-Skripte, die mit verschiedenen Ausgabeformen jeweils die Position des retroreflektiven Markers bestimmen. Zum Teil erfüllen sie weitere Funktionen. Die verschiedenen Programme sind unter [Eingerichteten Raspberry Pi zum Marker Tracking nutzen](#eingerichteten-raspberry-pi-zum-marker-tracking-nutzen) erklärt. Dazu wird `rpicam-hello` oder `rpicam-vid` aufgerufen und durch entsprechende [Optionen](#marker-tracking-in-der-rpicam-apps-pipeline) konfiguriert, wobei andere Dateien des Projektes referenziert werden.
 
-`rpicam-apps/build/` wird durch die Option post-process-libs referenziert, da sich hier die kompilierten zusätzlichen Postprocessing-Stufen befinden. Um `rpicam-apps/build/` zu erzeugen werden die Postprocessing-Stufen in `new_post_processing_stages/` mithilfe der `meson.build`-Datei kompiliert (siehe [rpicam-reflector-tracking einrichten](#rpicam-reflector-tracking-einrichten)). Alternativ könnte `rpicam-apps` gemäß der [entsprechenden Dokumentation](https://www.raspberrypi.com/documentation/computers/camera_software.html#build-libcamera-and-rpicam-apps) mit den zusätzlichen Postprocessing-Stufen neu gebaut und installiert werden, die hier gewählte Methode erlaubt aber schneller Iteration bei Anpassung der Postprocessing-Stufen.
+`rpicam-apps/build/` wird durch die Option `post-process-libs` referenziert, da sich hier die kompilierten zusätzlichen Postprocessing-Stufen befinden. Um `rpicam-apps/build/` zu erzeugen, werden die Postprocessing-Stufen in `new_post_processing_stages/` mithilfe der `meson.build`-Datei kompiliert (siehe [rpicam-reflector-tracking einrichten](#rpicam-reflector-tracking-einrichten)). Alternativ könnte `rpicam-apps` gemäß der [Raspberry Pi-Dokumentation](https://www.raspberrypi.com/documentation/computers/camera_software.html#build-libcamera-and-rpicam-apps) mit den zusätzlichen Postprocessing-Stufen neu gebaut und installiert werden, die hier gewählte Methode erlaubt aber eine schnellere Iteration bei Anpassung der Postprocessing-Stufen.
 
-`configuration_camera.txt` wird der Option `config` übergeben um Videoeigenschaften der Kamera einzustellen, die für alle Programme in `programs` gleich sind. Die JSON-Dateien im Ordner `configuration_post_processing/` werden durch die Option post-process-file referenziert und konfigurieren, welche Postprocessing-Stufen genutzt werden.
+`configuration_camera.txt` wird der Option `config` übergeben, um Videoeigenschaften der Kamera einzustellen, die für alle Programme in `programs/` gleich sind. Die JSON-Dateien im Ordner `configuration_post_processing/` werden durch die Option `post-process-file` referenziert. Sie konfigurieren, welche Postprocessing-Stufen genutzt werden.
 
-`set_leds` enthält *Python*-Dateien, um den LED-Ring zu steuern. Dazu wird die im Ordner enthaltene Bibliothek [Pi5Neo](https://github.com/vanshksingh/Pi5Neo/tree/main) genutzt. Die Steuerung funktioniert erfahrungsgemäß obwohl der Raspberry Pi 3,3&nbsp;V-Logk nutzt, der LED-Ring aber 5&nbsp;V-Logik. `clear_leds.py` deaktiviert die LEDs. `set_leds` setzt die alle LEDs des Rings auf eine festgelegte Farbe. Die Farbe kann mit den Flags `--r`, `--g` und `--b` (jeweils 0 bis 255) in der folgenden Form gesetzt werden.
+`set_leds` enthält *Python*-Dateien, um den LED-Ring zu steuern. Dazu wird die im Ordner enthaltene Bibliothek [Pi5Neo](https://github.com/vanshksingh/Pi5Neo/tree/main) genutzt. Die Steuerung funktioniert erfahrungsgemäß, obwohl der Raspberry Pi 3,3&nbsp;V-Logk nutzt, der LED-Ring aber 5&nbsp;V-Logik. `clear_leds.py` deaktiviert die LEDs. `set_leds` setzt die alle LEDs des Rings auf eine festgelegte Farbe. Die Farbe kann mit den Flags `--r`, `--g` und `--b` (jeweils 0 bis 255) in der folgenden Form gesetzt werden.
 
 ```bash
 ./set_leds.py --r 70 -- g 30
@@ -188,21 +188,21 @@ rpicam-reflector-tracking/
 
 Im Ordner `stl/` befindet sich ein Modell der Halterung, die zur mechanischen Verbindung des LED-Rings mit dem Objektiv genutzt wird. `README.md` und `images/` dienen dieser Dokumentation.
 
-`interfaces` enthält *C++*-Programme, mit denen die Schnittstellen Ethernet, UART und PWM getestet werden können. So können Signale gesendet und auch empfangen werden. Insbesondere können diese Programme auch genutzt werden, um einen zweiten Raspberry Pi als Empfänger der über Ethernet oder UART gesendeten Positionsdaten zu verwenden, oder um den zum Marker Tracking genutzten Raspberry Pi über Ethernet zu steuern.
+`interfaces` enthält *C++*-Programme, mit denen die Schnittstellen Ethernet, UART und PWM getestet werden können. So können Signale gesendet und auch empfangen werden. Insbesondere können diese Programme auch auf einem zweiten Raspberry Pi genutzt werden, um die über Ethernet oder UART gesendeten Positionsdaten zu empfangen zu verwenden, oder um den zum Marker Tracking genutzten Raspberry Pi über Ethernet zu steuern.
 
 **Programme in `interfaces`**
 
 | Datei | Funktion | Vorgesehenes Gerät |
 | --- | --- | --- |
-| ethernet_await_start | Wartet bis `START`-Flag `0xAA` per Ethernet empfangen wird | Gerät mit Kamera |
-| ethernet_recv_byte | Empfängt ein Byte per Ethernet und gibt es aus (`cout`) | Gerät mit Kamera |
-| ethernet_recv_coor | Empfängt Positionen per Ethernet und gibt sie aus (`cout`) | Empfänger/Steuerungsgerät |
-| ethernet_send_byte | Sendet ein Byte per Ethernet (auch für `START`- und `STOP`-Flag) | Empfänger/Steuerungsgerät |
-| ethernet_send_coor | Sendet eine Position per Ethernet (Testzwecke) | Gerät mit Kamera |
-| pwm_clear | Deaktiviert die beiden Hardware-UART-Kanäle des Raspberry Pis | Gerät mit Kamera |
-| pwm_set_coor | Setzt den Tastgrad der beiden Hardware-PWM-Kanäle | Gerät mit Kamera |
-| uart_recv_coor | Empfängt Positionen per UART und gibt sie aus (`cout`) | Empfänger/Steuerungsgerät |
-| uart_send_coor | Sendet eine Position per UART (Testzwecke) | Gerät mit Kamera |
+| `ethernet_await_start` | Wartet, bis die `START`-Flag `0xAA` per Ethernet empfangen wird | Gerät mit Kamera |
+| `ethernet_recv_byte` | Empfängt ein Byte per Ethernet und gibt es aus (`cout`) | Gerät mit Kamera |
+| `ethernet_recv_coor` | Empfängt Positionen per Ethernet und gibt sie aus (`cout`) | Empfänger/Steuerungsgerät |
+| `ethernet_send_byte` | Sendet ein Byte per Ethernet (auch für `START`- und `STOP`-Flag) | Empfänger/Steuerungsgerät |
+| `ethernet_send_coor` | Sendet eine Position per Ethernet (Testzwecke) | Gerät mit Kamera |
+| `pwm_clear` | Deaktiviert die beiden Hardware-UART-Kanäle des Raspberry Pis | Gerät mit Kamera |
+| `pwm_set_coor` | Setzt den Tastgrad der beiden Hardware-PWM-Kanäle | Gerät mit Kamera |
+| `uart_recv_coor` | Empfängt Positionen per UART und gibt sie aus (`cout`) | Empfänger/Steuerungsgerät |
+| `uart_send_coor` | Sendet eine Position per UART (Testzwecke) | Gerät mit Kamera |
 
 ## Raspberry Pi einrichten mit rpicam-reflector-tracking
 
