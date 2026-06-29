@@ -1,6 +1,7 @@
 {
     "marker_tracking_cv": {
-        "threshold": 150
+        "threshold": 35,
+        "display_thresholding": false
     },
     "position_uart": {},
     "draw_centroid_cv": {

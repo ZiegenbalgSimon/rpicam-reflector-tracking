@@ -33,6 +33,7 @@ public:
 private:
     Stream *stream_;
     int threshold_ = 150;
+    bool display_thresholding_ = false;
 };
 
 #define NAME "marker_tracking_cv"
@@ -45,6 +46,7 @@ void MarkerTrackingCvStage::Read(boost::property_tree::ptree const &params)
 {
     // read parameters from JSON file
     threshold_ = params.get<int>("threshold", 150);
+    display_thresholding_ = params.get<bool>("display_thresholding", false);
 }
 
 void MarkerTrackingCvStage::Configure()
@@ -72,6 +74,18 @@ bool MarkerTrackingCvStage::Process(CompletedRequestPtr &completed_request)
 
     // calculate moments (up to third order)
     Moments m = moments(y_plane, false);
+
+    if(display_thresholding_) {
+        // create a OpenCV Mat object from the U plane and V plane (color, half resolution)
+        uint8_t *u_ptr = ptr + info.stride * info.height;
+        uint8_t *v_ptr = u_ptr + (info.stride / 2) * (info.height / 2);
+        Mat u_plane(info.height / 2, info.width / 2, CV_8U, u_ptr, info.stride / 2);
+        Mat v_plane(info.height / 2, info.width / 2, CV_8U, v_ptr, info.stride / 2);
+        
+        // neutralize U and V plane
+        u_plane.setTo(128);
+        v_plane.setTo(128);
+    }
 
     // calculate intensity weighted centroid from moments
     float cx = 0.0;

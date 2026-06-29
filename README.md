@@ -461,8 +461,9 @@ cd ~/rpicam-reflector-tracking/programs
 
 In der folgenden Auflistung ist angegeben, welche Postprocessing-Stufen und welche Applikation die Programme jeweils nutzen. Mit der Erklärung der [Konfigurationsdateien von rpicam-reflector-tracking](#konfigurationsdateien-von-rpicam-reflector-tracking) erschließen sich daraus die Eigenschaften der Programme.
 
-| Program | Applikation | JSON-Datei |
+| Programm | Applikation | JSON-Datei |
 | --- | --- | --- |
+| `capture_frame.sh` | `rpicam-hello` | / |
 | `tracking_cout.sh` | `rpicam-hello` | `configuration_cout.json` |
 | `tracking_cout_vid.sh` | `rpicam-vid` | `configuration_cout.json` |
 | `tracking_ethernet.sh` | `rpicam-hello` | `configuration_ethernet.json` |
@@ -472,7 +473,49 @@ In der folgenden Auflistung ist angegeben, welche Postprocessing-Stufen und welc
 
 `tracking_ethernet_remote.sh` dient dazu, das Marker Tracking über Ethernet vom Empfänger beziehungsweise Steuerungsgerät aus steuern zu können. Wenn das Programm gestartet wird, wartet der Raspberry Pi mit Kamera, bis er die `START`-Flag per Ethernet empfängt. Daraufhin wird der LED-Ring aktiviert und `tracking_ethernet.sh` gestartet. Sobald die `STOP`-Flag per Ethernet empfangen wird, wird das Marker Tracking beendet, der LED-Ring deaktiviert und erneut auf die `START`-Flag gewartet. 
 
-`tracking_cout_vid.sh` erstellt im `rpicam-reflector-tracking`-Ordner einen Ordner `tracking_videos/`, falls dieser noch nicht existiert. Dort werden die aufgenommenen Videos gespeichert, wobei für den Dateinamen der Aufnahmezeitpunkt genutzt wird.
+`tracking_cout_vid.sh` erstellt im `rpicam-reflector-tracking`-Ordner einen Ordner `tracking_videos/`, falls dieser noch nicht existiert. Dort werden die aufgenommenen Videos gespeichert, wobei für den Dateinamen der Aufnahmezeitpunkt genutzt wird. Mit `capture_frame.sh` kann zu Testzwecken ein Foto mit den zum Tracking genutzten Kameraeinstellungen ohne Postprocessing erstellt und im Ordner `captured_frames/` gespeichert werden.
+
+**Marker-Tracking beim Hochfahren automatisch starten**
+
+Optional kann eingerichtet werden, dass beispielsweise das Programm `tracking_ethernet_remote.sh` beim Hochfahren des Raspberry Pis automatisch gestartet wird. Dazu müssen die folgenden Schritte befolgt werden.
+
+Datei erstellen.
+
+```bash
+sudo nano /etc/systemd/system/startup.service
+```
+
+Dateiinhalt einfügen.
+
+```INI
+[Unit]
+Description=Marker-Tracking bei Startup starten
+After=network.target
+
+[Service]
+Type=simple
+User=pi
+ExecStart=/home/pi/rpicam-reflector-tracking/programs/tracking_ethernet_remote.sh
+WorkingDirectory=/home/pi/rpicam-reflector-tracking/programs
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Aktivieren.
+
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable startup.service
+sudo systemctl start startup.service
+```
+
+Mit dem folgenden Befehl kann geprüft werden, ob die Einrichtung erfolgreich war.
+
+```bash
+systemctl status startup.service
+```
 
 ## Möglichkeiten zur Erweiterung des Projekts
 
